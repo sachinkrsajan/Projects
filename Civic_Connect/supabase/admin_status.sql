@@ -59,3 +59,11 @@ create policy "threads_delete_own_or_official" on threads
 --   ('Riverbank cleanup drive', '2026-07-12', 'Ward 2 · 8:00 AM', 24),
 --   ('Tree plantation — Bistupur park', '2026-07-19', 'Ward 4 · 7:00 AM', 12),
 --   ('Ward town hall meeting', '2026-07-26', 'Community hall · 6:00 PM', 0);
+
+-- ============================================================
+-- CivicConnect — grant admin role
+-- 'official' can update issue status; only 'admin' can review/
+-- approve/reject resolution proofs. If you only ran the earlier
+-- supabase_admin.txt script, you have an 'official' but no 'admin'.
+-- ============================================================
+

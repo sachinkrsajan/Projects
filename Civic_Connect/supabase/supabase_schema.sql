@@ -7,3 +7,4 @@ using ( bucket_id = 'issue-photos' );
 create policy "issue_photos_authenticated_upload"
 on storage.objects for insert
 with check ( bucket_id = 'issue-photos' and auth.role() = 'authenticated' );
+
