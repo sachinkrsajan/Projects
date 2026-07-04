@@ -1,8 +1,3 @@
-// supabase/functions/analyze-issue-photo/index.ts
-//
-// This runs on Supabase's servers, not in the browser — so GEMINI_API_KEY
-// (set as a secret, see deploy instructions) is never visible to users.
-// The frontend calls this function instead of calling Gemini directly.
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 

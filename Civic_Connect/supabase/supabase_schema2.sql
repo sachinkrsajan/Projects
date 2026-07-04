@@ -1,12 +1,4 @@
--- =====================================================================
--- CivicConnect — Resolution Proof / Verification / Timeline / Notifications
--- Run this in the Supabase SQL editor. Assumes the existing "issues" and
--- "profiles" tables already exist from the original project.
--- =====================================================================
 
--- ---------------------------------------------------------------------
--- FEATURE 5: resolution_proofs
--- ---------------------------------------------------------------------
 create table if not exists public.resolution_proofs (
   id uuid primary key default gen_random_uuid(),
   issue_id uuid not null references public.issues(id) on delete cascade,
@@ -57,9 +49,8 @@ create policy "admins can delete all proofs"
   to authenticated
   using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
--- ---------------------------------------------------------------------
 -- FEATURE 3 support: issue_timeline (date/time/user/comment per step)
--- ---------------------------------------------------------------------
+
 create table if not exists public.issue_timeline (
   id uuid primary key default gen_random_uuid(),
   issue_id uuid not null references public.issues(id) on delete cascade,
@@ -92,9 +83,9 @@ create policy "authenticated can insert timeline events"
     or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role in ('official','admin'))
   );
 
--- ---------------------------------------------------------------------
+
 -- FEATURE 4: notifications
--- ---------------------------------------------------------------------
+
 create table if not exists public.notifications (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -137,22 +128,9 @@ create policy "users insert own notifications"
 -- Enable Realtime for the notifications bell
 alter publication supabase_realtime add table public.notifications;
 
--- ---------------------------------------------------------------------
--- Role update: profiles.role now supports 'citizen' | 'official' | 'admin'
--- (No schema change needed if role is already a free-text/enum column —
--- just make sure the check constraint, if any, allows 'admin'.)
--- Example, only run if you already have a check constraint to replace:
--- alter table public.profiles drop constraint if exists profiles_role_check;
--- alter table public.profiles add constraint profiles_role_check
---   check (role in ('citizen','official','admin'));
 
--- To make a user an Admin, run (after they sign up once):
--- update public.profiles set role = 'admin' where id = '<their-auth-user-uuid>';
-
-
--- =====================================================================
 -- FEATURE 6: Storage — "resolution-proofs" bucket + policies
--- =====================================================================
+
 
 -- Create the bucket (id and name both "resolution-proofs"), public read so
 -- citizens/admins can preview images directly via public URL.

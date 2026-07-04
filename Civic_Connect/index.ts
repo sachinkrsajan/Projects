@@ -1,8 +1,4 @@
-// supabase/functions/analyze-issue-photo/index.ts
-//
-// This runs on Supabase's servers, not in the browser — so GEMINI_API_KEY
-// (set as a secret, see deploy instructions) is never visible to users.
-// The frontend calls this function instead of calling Gemini directly.
+
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 
@@ -16,7 +12,7 @@ const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
 const GEMINI_URL =
   `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-// Forces Gemini to return exactly this shape — no prompt-parsing guesswork needed.
+
 const RESPONSE_SCHEMA = {
   type: "OBJECT",
   properties: {

@@ -1,12 +1,7 @@
--- ============================================================
--- CivicConnect — Resolution Proof feature
--- Run this in Supabase SQL Editor. Safe to re-run (idempotent).
--- Assumes: profiles(id, role), issues(id, user_id, status) already exist.
--- ============================================================
 
--- ------------------------------------------------------------
+-- CivicConnect — Resolution Proof feature
 -- TABLE
--- ------------------------------------------------------------
+
 create table if not exists resolution_proofs (
   id uuid primary key default gen_random_uuid(),
   issue_id uuid not null references issues(id) on delete cascade,
@@ -47,9 +42,8 @@ create policy "resolution_proofs_admin_update" on resolution_proofs
     exists (select 1 from profiles p where p.id = auth.uid() and p.role in ('official','admin'))
   );
 
--- ------------------------------------------------------------
 -- STORAGE — "resolution-proofs" bucket
--- ------------------------------------------------------------
+
 insert into storage.buckets (id, name, public)
 values ('resolution-proofs', 'resolution-proofs', true)
 on conflict (id) do nothing;

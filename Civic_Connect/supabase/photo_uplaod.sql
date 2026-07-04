@@ -1,24 +1,9 @@
--- ============================================================
--- CivicConnect — Supabase schema
--- Run this once in your Supabase project's SQL editor:
--- Dashboard → SQL Editor → New query → paste → Run
---
--- If you already ran an earlier version of this script and hit
--- an error partway through, run this DROP block first to clean
--- up, then run the rest of the script fresh:
---
---   drop table if exists issue_supports cascade;
---   drop table if exists threads cascade;
---   drop table if exists issues cascade;
---   drop table if exists profiles cascade;
--- ============================================================
 
--- Needed for gen_random_uuid()
+-- CivicConnect — Supabase schema
+
+
 create extension if not exists pgcrypto;
 
--- ------------------------------------------------------------
--- PROFILES  (created first — issues policies below depend on it)
--- ------------------------------------------------------------
 create table if not exists profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   display_name text,
@@ -51,9 +36,9 @@ create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure handle_new_user();
 
--- ------------------------------------------------------------
+
 -- ISSUES
--- ------------------------------------------------------------
+
 create table if not exists issues (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete set null,
@@ -91,12 +76,8 @@ create policy "issues_update_own_or_official" on issues
     or exists (select 1 from profiles p where p.id = auth.uid() and p.role = 'official')
   );
 
--- To make yourself (or anyone) a municipal official for testing, run:
--- update profiles set role = 'official' where id = '<their-user-uuid>';
-
--- ------------------------------------------------------------
 -- ISSUE SUPPORTS  (one upvote per user per issue)
--- ------------------------------------------------------------
+
 create table if not exists issue_supports (
   id uuid primary key default gen_random_uuid(),
   issue_id uuid not null references issues(id) on delete cascade,
@@ -115,9 +96,9 @@ drop policy if exists "supports_insert_own" on issue_supports;
 create policy "supports_insert_own" on issue_supports
   for insert with check (auth.uid() = user_id);
 
--- ------------------------------------------------------------
+
 -- COMMUNITY DISCUSSION THREADS
--- ------------------------------------------------------------
+
 create table if not exists threads (
   id uuid primary key default gen_random_uuid(),
   user_id uuid references auth.users(id) on delete set null,
@@ -136,8 +117,3 @@ drop policy if exists "threads_insert_own" on threads;
 create policy "threads_insert_own" on threads
   for insert with check (auth.uid() = user_id);
 
--- ============================================================
--- STORAGE
--- Do this in the dashboard, not SQL:
--- Storage → New bucket → name it "issue-photos" → toggle "Public bucket" ON
--- ============================================================
