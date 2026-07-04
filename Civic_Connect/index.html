@@ -236,6 +236,75 @@
   .pill-assigned{ background:rgba(184,129,30,0.15); color:var(--status-assigned); }
   .pill-progress{ background:rgba(196,102,27,0.15); color:var(--status-progress); }
   .pill-resolved{ background:rgba(46,125,79,0.15); color:var(--status-resolved); }
+  .pill-pending{ background:rgba(108,76,156,0.15); color:#6C4C9C; }
+  .pill-verified{ background:rgba(46,125,79,0.15); color:var(--status-resolved); font-weight:700; }
+
+  /* ============ NOTIFICATIONS ============ */
+  .notif-wrap{ position:relative; }
+  .notif-bell{
+    background:none; border:1.5px solid var(--hairline); border-radius:999px; width:38px; height:38px;
+    display:flex; align-items:center; justify-content:center; position:relative; color:var(--ink-blue);
+  }
+  .notif-bell:hover{ border-color:var(--accent); }
+  .notif-badge{
+    position:absolute; top:-4px; right:-4px; background:var(--accent); color:#fff; font-size:10px;
+    font-weight:700; min-width:16px; height:16px; border-radius:999px; display:flex; align-items:center;
+    justify-content:center; padding:0 3px; line-height:1;
+  }
+  .notif-dropdown{
+    position:absolute; top:calc(100% + 10px); right:0; width:320px; max-width:calc(100vw - 32px);
+    background:var(--card); border-radius:var(--radius-m); box-shadow:0 20px 50px -15px rgba(0,0,0,0.35);
+    border:1px solid var(--hairline); z-index:220; display:none; max-height:400px; overflow-y:auto;
+  }
+  .notif-dropdown.is-open{ display:block; }
+  .notif-dropdown h4{
+    margin:0; padding:14px 16px; font-family:var(--font-mono); font-size:11px; text-transform:uppercase;
+    letter-spacing:0.06em; color:var(--ink-soft); border-bottom:1px solid var(--hairline);
+  }
+  .notif-item{ padding:12px 16px; border-bottom:1px solid var(--hairline); font-size:13px; }
+  .notif-item:last-child{ border-bottom:none; }
+  .notif-item.is-unread{ background:rgba(216,83,31,0.05); }
+  .notif-item time{ display:block; font-size:11px; color:var(--ink-soft); margin-top:3px; }
+  .notif-empty{ padding:20px 16px; font-size:13px; color:var(--ink-soft); text-align:center; }
+
+  /* ============ TIMELINE ============ */
+  .timeline{ margin:18px 0; padding-left:2px; }
+  .timeline__item{ position:relative; padding-left:26px; padding-bottom:20px; }
+  .timeline__item:last-child{ padding-bottom:0; }
+  .timeline__item::before{
+    content:''; position:absolute; left:5px; top:4px; width:10px; height:10px; border-radius:50%;
+    background:var(--hairline); border:2px solid var(--card); box-shadow:0 0 0 2px var(--hairline);
+  }
+  .timeline__item::after{
+    content:''; position:absolute; left:9px; top:16px; bottom:0; width:2px; background:var(--hairline);
+  }
+  .timeline__item:last-child::after{ display:none; }
+  .timeline__item.is-done::before{ background:var(--status-resolved); box-shadow:0 0 0 2px var(--status-resolved); }
+  .timeline__step{ font-weight:700; font-size:13.5px; }
+  .timeline__meta{ font-size:11.5px; color:var(--ink-soft); margin-top:2px; }
+  .timeline__comment{ font-size:12.5px; color:var(--ink); margin-top:4px; background:var(--paper-2); border-radius:8px; padding:8px 10px; }
+
+  /* ============ RESOLUTION PROOF ============ */
+  .proof-box{ background:var(--paper-2); border:1px dashed var(--hairline); border-radius:var(--radius-m); padding:16px; margin-top:16px; }
+  .proof-box h4{ margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft); font-family:var(--font-mono); }
+  .proof-preview{ display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
+  .proof-preview img{ width:120px; height:90px; object-fit:cover; border-radius:8px; border:1px solid var(--hairline); }
+  .proof-status-line{ display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; }
+
+  /* ============ ADMIN VERIFICATION QUEUE ============ */
+  .verify-card{ background:var(--card); border-radius:var(--radius-m); box-shadow:var(--shadow-card); padding:18px; margin-bottom:16px; }
+  .verify-card__head{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:12px; }
+  .verify-card__images{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  .verify-card__images figure{ margin:0; }
+  .verify-card__images img{ width:100%; height:120px; object-fit:cover; border-radius:8px; border:1px solid var(--hairline); }
+  .verify-card__images figcaption{ font-size:11px; color:var(--ink-soft); margin-top:4px; text-transform:uppercase; letter-spacing:0.04em; }
+  .verify-card__comment{ font-size:13px; margin-bottom:12px; background:var(--paper-2); border-radius:8px; padding:10px 12px; }
+  .verify-card__meta{ font-size:11.5px; color:var(--ink-soft); margin-bottom:12px; }
+  .verify-card__actions{ display:flex; gap:10px; }
+  .btn-approve{ background:var(--status-resolved); color:#fff; }
+  .btn-approve:hover{ background:#256841; }
+  .btn-reject{ background:transparent; color:var(--mark-electric); border-color:var(--mark-electric); }
+  .btn-reject:hover{ background:rgba(192,35,31,0.08); }
 
   /* ============ LIFECYCLE ============ */
   .lifecycle{ padding:66px 0 50px; }
@@ -401,7 +470,7 @@
   .issue-card__meta{ font-size:12.5px; color:var(--ink-soft); margin-bottom:10px; }
   .issue-card__desc{ font-size:13px; color:var(--ink-soft); margin-bottom:14px; flex:1; }
   .issue-card__footer{
-    display:flex; align-items:center; justify-content:space-between;
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
     border-top:1px solid var(--hairline); padding-top:12px; margin-top:auto;
   }
   .support-btn{
@@ -498,7 +567,14 @@
   .modal-box{
     background:var(--card); border-radius:var(--radius-l); padding:28px; max-width:380px; width:100%;
     box-shadow:0 30px 60px -20px rgba(0,0,0,0.5); position:relative;
+    max-height:calc(100vh - 40px); overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
+  .modal-box.modal-box--wide{ max-width:560px; }
+  .details-btn{
+    background:none; border:1.5px solid var(--hairline); border-radius:999px; padding:6px 12px;
+    font-size:12.5px; font-weight:700; color:var(--ink-soft);
+  }
+  .details-btn:hover{ border-color:var(--ink-blue); color:var(--ink-blue); }
   .modal-close{
     position:absolute; top:16px; right:16px; background:none; border:none; font-size:20px; color:var(--ink-soft); line-height:1;
   }
@@ -523,12 +599,17 @@
     .steps::before{ display:none; }
   }
   @media (max-width: 640px){
-    .nav__links, .nav__actions .btn-ghost-light{ display:none; }
+    .nav__links{ display:none; }
     .nav.is-open .nav__links{
       display:flex; flex-direction:column; position:absolute; top:100%; left:0; right:0;
       background:var(--paper); padding:18px 28px; gap:16px; border-bottom:1px solid var(--hairline);
+      max-height:calc(100vh - 60px); overflow-y:auto;
     }
     .nav__toggle{ display:block; }
+    /* the big "Report an issue" pill in the header is redundant with the
+       bottom tab bar's Report tab on mobile, so free up header space for
+       the auth buttons instead */
+    .nav__actions > a.btn-primary{ display:none; }
     .hero{ padding:52px 0 40px; }
     .hero__stats{ flex-wrap:wrap; gap:16px; }
     .hero__stat{ flex:1 1 40%; }
@@ -536,6 +617,76 @@
     .field-row{ grid-template-columns:1fr; }
     .step{ flex:1 1 100%; }
     .wrap{ padding:0 18px; }
+    .modal-overlay{ padding:12px; align-items:flex-end; }
+    .modal-box{ padding:20px 16px 24px; max-height:min(88vh, 88dvh); width:100%; }
+    .modal-box.modal-box--wide{ max-width:100%; }
+    .verify-card__images{ grid-template-columns:1fr 1fr; }
+    .notif-dropdown{ width:100%; max-width:calc(100vw - 24px); right:-4px; }
+    .nav__inner{ padding:10px 14px; }
+    .nav__actions{ gap:6px; }
+    .nav__actions .btn-sm{ padding:8px 12px; font-size:12.5px; }
+    /* body needs bottom padding so fixed mobile tab bar never covers content */
+    body{ padding-bottom:64px; }
+  }
+  @media (max-width: 400px){
+    .hero__stats{ gap:12px; }
+    .hero__stat{ flex:1 1 100%; padding-right:0; }
+    .verify-card__images{ grid-template-columns:1fr; }
+    .verify-card__actions{ flex-direction:column; }
+    .verify-card__actions .btn{ width:100%; justify-content:center; }
+    .modal-tabs button{ font-size:12px; padding:8px 4px; }
+  }
+  html, body{ overflow-x:hidden; max-width:100%; }
+
+  /* ============ MOBILE BOTTOM TAB BAR ============ */
+  .tabbar{ display:none; }
+  @media (max-width: 768px){
+    button, .btn, input, select, textarea, a.btn{ min-height:40px; }
+    .tabbar{
+      display:flex; position:fixed; left:0; right:0; bottom:0; z-index:150;
+      background:var(--card); border-top:1px solid var(--hairline);
+      padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+      box-shadow:0 -6px 20px -10px rgba(18,42,68,0.25);
+    }
+    .tabbar__item{
+      flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:3px; background:none; border:none; color:var(--ink-soft); font-family:var(--font-body);
+      font-size:10.5px; font-weight:600; padding:6px 2px; min-height:48px; text-decoration:none;
+    }
+    .tabbar__item svg{ width:21px; height:21px; }
+    .tabbar__item.is-active{ color:var(--accent); }
+    .tabbar__item--report{ position:relative; }
+    .tabbar__item--report .tabbar__fab{
+      width:42px; height:42px; border-radius:50%; background:var(--accent); color:#fff;
+      display:flex; align-items:center; justify-content:center; margin-top:-22px;
+      box-shadow:0 6px 16px -4px rgba(216,83,31,0.6); border:3px solid var(--card);
+    }
+    .tabbar__item--report svg{ width:20px; height:20px; }
+    .tabbar__item--report.is-active{ color:var(--ink-blue); }
+  }
+  @media (min-width: 769px){ .tabbar{ display:none !important; } }
+
+  /* ============ MOBILE PROFILE SHEET ============ */
+  .profile-sheet-overlay{
+    position:fixed; inset:0; background:rgba(18,42,68,0.55); z-index:210; display:none;
+    align-items:flex-end; justify-content:center;
+  }
+  .profile-sheet-overlay.is-open{ display:flex; }
+  .profile-sheet{
+    background:var(--card); width:100%; max-width:480px; border-radius:20px 20px 0 0;
+    padding:22px 20px calc(22px + env(safe-area-inset-bottom)); max-height:80vh; overflow-y:auto;
+  }
+  .profile-sheet__handle{ width:40px; height:4px; border-radius:99px; background:var(--hairline); margin:0 auto 16px; }
+  .profile-sheet__head{ display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .profile-sheet__avatar{
+    width:48px; height:48px; border-radius:50%; background:var(--ink-blue); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; flex:none;
+  }
+  .profile-sheet__name{ font-weight:700; font-size:16px; color:var(--ink); }
+  .profile-sheet__email{ font-size:12.5px; color:var(--ink-soft); }
+  .profile-sheet__role{
+    display:inline-block; margin-top:4px; font-size:10.5px; font-weight:700; text-transform:uppercase;
+    letter-spacing:0.04em; color:var(--ink-blue); background:var(--paper-2); padding:2px 8px; border-radius:99px;
   }
 </style>
 </head>
@@ -556,15 +707,59 @@
         <li><a href="#feed">Issues</a></li>
         <li><a href="#community">Community</a></li>
         <li id="navAdminLink" style="display:none;"><a href="#admin">Admin</a></li>
+        <li id="navVerificationLink" style="display:none;"><a href="#verification">Verify proofs</a></li>
       </ul>
     </nav>
     <div class="nav__actions">
+      <div class="notif-wrap" id="notifWrap" style="display:none;">
+        <button type="button" class="notif-bell" id="notifBell" aria-label="Notifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+        </button>
+        <div class="notif-dropdown" id="notifDropdown">
+          <h4>Notifications</h4>
+          <div id="notifList"><div class="notif-empty">No notifications yet.</div></div>
+        </div>
+      </div>
       <span id="authArea"></span>
-      <a href="#report" class="btn btn-primary btn-sm">Report an issue</a>
+      <a href="#report" class="btn btn-primary btn-sm"><span class="btn-label-full">Report an issue</span></a>
       <button class="nav__toggle" id="navToggle" aria-label="Toggle menu"><span></span></button>
     </div>
   </div>
 </header>
+
+<!-- Mobile-only bottom tab bar (hidden on desktop via CSS) -->
+<nav class="tabbar" id="tabbar" aria-label="Primary mobile navigation">
+  <a href="#top" class="tabbar__item" data-tab="home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+    Home
+  </a>
+  <a href="#map-section" class="tabbar__item" data-tab="map">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l-5 2V6l5-2 6 2 5-2v14l-5 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>
+    Map
+  </a>
+  <a href="#report" class="tabbar__item tabbar__item--report" data-tab="report">
+    <span class="tabbar__fab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></span>
+    Report
+  </a>
+  <a href="#community" class="tabbar__item" data-tab="community">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M2 20c0-3.3 3-6 7-6s7 2.7 7 6"/><circle cx="18" cy="9" r="2.4"/><path d="M15.5 14.2c2.6.3 4.5 2.4 4.5 5.8"/></svg>
+    Community
+  </a>
+  <button type="button" class="tabbar__item" id="tabbarProfile" data-tab="profile">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+    Profile
+  </button>
+</nav>
+
+<!-- Mobile profile bottom sheet -->
+<div class="profile-sheet-overlay" id="profileSheetOverlay">
+  <div class="profile-sheet">
+    <div class="profile-sheet__handle"></div>
+    <div id="profileSheetBody"></div>
+  </div>
+</div>
+
 
 <section class="hero">
   <div class="wrap hero__inner">
@@ -799,6 +994,15 @@
   </div>
 </section>
 
+<section class="community-section wrap" id="verification" style="display:none; padding-top:0;">
+  <div class="section-head">
+    <span class="eyebrow">ADMIN ONLY</span>
+    <h2>Resolution Verification Queue</h2>
+    <p>Review resolution proofs uploaded by citizens and approve or reject them.</p>
+  </div>
+  <div id="verificationList"></div>
+</section>
+
 <footer>
   <div class="wrap footer-inner">
     <div>
@@ -844,6 +1048,22 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="issueDetailOverlay">
+  <div class="modal-box modal-box--wide">
+    <button type="button" class="modal-close" id="issueDetailClose" aria-label="Close">&times;</button>
+    <div class="issue-card__case" id="idCase"></div>
+    <h3 style="text-transform:none; font-size:19px; margin-bottom:6px;" id="idTitle"></h3>
+    <span class="pill" id="idStatus"></span>
+    <p class="meta" style="margin:10px 0 0; font-size:13px; color:var(--ink-soft);" id="idMeta"></p>
+    <p style="font-size:13.5px; margin-top:10px;" id="idDesc"></p>
+
+    <h4 style="font-size:12px; text-transform:uppercase; letter-spacing:0.05em; color:var(--ink-soft); font-family:var(--font-mono); margin-top:20px;">Timeline</h4>
+    <div class="timeline" id="idTimeline"></div>
+
+    <div id="idProofSection"></div>
+  </div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function(){
@@ -857,10 +1077,10 @@
     drainage: {label:"Drainage", color:"#6C4C9C"},
     other: {label:"Other", color:"#5B6560"}
   };
-  var STATUSES = ["Reported","Under Review","Assigned","In Progress","Resolved"];
+  var STATUSES = ["Reported","Under Review","Assigned","In Progress","Pending Verification","Resolved"];
   var STATUS_CLASS = {
     "Reported":"pill-reported","Under Review":"pill-review","Assigned":"pill-assigned",
-    "In Progress":"pill-progress","Resolved":"pill-resolved"
+    "In Progress":"pill-progress","Resolved":"pill-resolved","Pending Verification":"pill-pending"
   };
 
   var CENTER = [22.7925, 86.2062]; // Jamshedpur
@@ -905,10 +1125,17 @@
 
   var state = { mapFilter:"all", feedCategory:"all", feedStatus:"all", uploadedImageBase64:null, uploadedImageMime:null, uploadedFile:null };
   var currentUser = null; // { id, email, displayName }
+  var notifications = [];
+  var notifChannel = null;
+  var currentDetailIssueId = null;
+  var currentDetailProof = null;
 
   /* ---------- Nav toggle ---------- */
   document.getElementById("navToggle").addEventListener("click", function(){
     document.querySelector(".nav").classList.toggle("is-open");
+  });
+  document.querySelectorAll(".nav__links a").forEach(function(a){
+    a.addEventListener("click", function(){ document.querySelector(".nav").classList.remove("is-open"); });
   });
 
   /* ---------- Auth ---------- */
@@ -930,6 +1157,66 @@
   document.getElementById("tabSignUp").addEventListener("click", function(){ openAuthModal("signup"); });
   document.getElementById("authClose").addEventListener("click", closeAuthModal);
   authOverlay.addEventListener("click", function(e){ if(e.target === authOverlay) closeAuthModal(); });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && authOverlay.classList.contains("is-open")) closeAuthModal();
+  });
+
+  /* ---------- Mobile bottom tab bar ---------- */
+  var tabbar = document.getElementById("tabbar");
+  var profileSheetOverlay = document.getElementById("profileSheetOverlay");
+
+  function openProfileSheet(){
+    var body = document.getElementById("profileSheetBody");
+    if(currentUser){
+      body.innerHTML =
+        '<div class="profile-sheet__head">'+
+          '<span class="profile-sheet__avatar">'+initials(currentUser.displayName)+'</span>'+
+          '<div><div class="profile-sheet__name">'+currentUser.displayName+'</div>'+
+          '<div class="profile-sheet__email">'+currentUser.email+'</div>'+
+          '<span class="profile-sheet__role">'+currentUser.role+'</span></div>'+
+        '</div>'+
+        '<button type="button" class="btn btn-ghost-light" style="width:100%; justify-content:center;" id="profileSheetSignOut">Sign out</button>';
+      document.getElementById("profileSheetSignOut").addEventListener("click", async function(){
+        await sbClient.auth.signOut();
+        closeProfileSheet();
+      });
+    } else {
+      body.innerHTML =
+        '<p style="margin:0 0 16px; font-size:13.5px; color:var(--ink-soft);">Sign in to see your reports, points and achievements.</p>'+
+        '<button type="button" class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom:10px;" id="profileSheetSignIn">Sign in</button>'+
+        '<button type="button" class="btn btn-ghost-light" style="width:100%; justify-content:center;" id="profileSheetSignUp">Sign up</button>';
+      document.getElementById("profileSheetSignIn").addEventListener("click", function(){ closeProfileSheet(); openAuthModal("signin"); });
+      document.getElementById("profileSheetSignUp").addEventListener("click", function(){ closeProfileSheet(); openAuthModal("signup"); });
+    }
+    profileSheetOverlay.classList.add("is-open");
+  }
+  function closeProfileSheet(){ profileSheetOverlay.classList.remove("is-open"); }
+  document.getElementById("tabbarProfile").addEventListener("click", openProfileSheet);
+  profileSheetOverlay.addEventListener("click", function(e){ if(e.target === profileSheetOverlay) closeProfileSheet(); });
+
+  function setActiveTab(tabName){
+    tabbar.querySelectorAll(".tabbar__item").forEach(function(item){
+      item.classList.toggle("is-active", item.getAttribute("data-tab") === tabName);
+    });
+  }
+  var tabSections = [["home","top"],["map","map-section"],["report","report"],["community","community"]];
+  tabbar.querySelectorAll("a.tabbar__item").forEach(function(a){
+    a.addEventListener("click", function(){ setActiveTab(a.getAttribute("data-tab")); });
+  });
+  var tabbarObserver = ("IntersectionObserver" in window) ? new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var match = tabSections.filter(function(t){ return t[1] === entry.target.id; })[0];
+        if(match) setActiveTab(match[0]);
+      }
+    });
+  }, { rootMargin: "-40% 0px -55% 0px" }) : null;
+  if(tabbarObserver){
+    tabSections.forEach(function(t){
+      var el = document.getElementById(t[1]);
+      if(el) tabbarObserver.observe(el);
+    });
+  }
 
   function renderAuthArea(){
     var area = document.getElementById("authArea");
@@ -945,14 +1232,32 @@
         await sbClient.auth.signOut();
       });
     } else {
-      area.innerHTML = '<button type="button" class="btn btn-ghost-light btn-sm" id="signInBtn">Sign in</button>';
+      area.innerHTML =
+        '<button type="button" class="btn btn-ghost-light btn-sm" id="signInBtn">Sign in</button>'+
+        '<button type="button" class="btn btn-primary btn-sm" id="signUpBtn">Sign up</button>';
       document.getElementById("signInBtn").addEventListener("click", function(){ openAuthModal("signin"); });
+      document.getElementById("signUpBtn").addEventListener("click", function(){ openAuthModal("signup"); });
     }
 
     var isOfficial = !!(currentUser && currentUser.role === "official");
     document.getElementById("navAdminLink").style.display = isOfficial ? "block" : "none";
     document.getElementById("admin").style.display = isOfficial ? "block" : "none";
     if(isOfficial){ renderAdminThreads(); loadEventsForAdmin(); }
+
+    var isAdmin = !!(currentUser && currentUser.role === "admin");
+    document.getElementById("navVerificationLink").style.display = isAdmin ? "block" : "none";
+    document.getElementById("verification").style.display = isAdmin ? "block" : "none";
+    if(isAdmin){ loadVerificationQueue(); }
+
+    document.getElementById("notifWrap").style.display = currentUser ? "block" : "none";
+    if(currentUser){
+      loadNotifications();
+      subscribeNotifRealtime();
+    } else {
+      unsubscribeNotifRealtime();
+      notifications = [];
+      renderNotifDropdown();
+    }
   }
 
   document.getElementById("authForm").addEventListener("submit", async function(e){
@@ -997,6 +1302,74 @@
       currentUser = null;
     }
     renderAuthArea();
+  }
+
+  /* ---------- Notifications (Feature 4) ---------- */
+  var notifWrap = document.getElementById("notifWrap");
+  var notifBell = document.getElementById("notifBell");
+  var notifDropdown = document.getElementById("notifDropdown");
+
+  notifBell.addEventListener("click", function(e){
+    e.stopPropagation();
+    var isOpen = notifDropdown.classList.toggle("is-open");
+    if(isOpen) markNotificationsRead();
+  });
+  document.addEventListener("click", function(e){
+    if(!notifWrap.contains(e.target)) notifDropdown.classList.remove("is-open");
+  });
+
+  function updateNotifBadge(){
+    var unread = notifications.filter(function(n){ return !n.is_read; }).length;
+    var badge = document.getElementById("notifBadge");
+    if(unread > 0){
+      badge.style.display = "flex";
+      badge.textContent = unread > 9 ? "9+" : String(unread);
+    } else {
+      badge.style.display = "none";
+    }
+  }
+
+  function renderNotifDropdown(){
+    var list = document.getElementById("notifList");
+    if(!notifications.length){
+      list.innerHTML = '<div class="notif-empty">No notifications yet.</div>';
+    } else {
+      list.innerHTML = notifications.map(function(n){
+        return '<div class="notif-item'+(n.is_read ? '' : ' is-unread')+'">'+n.message+'<time>'+timeAgo(n.created_at)+'</time></div>';
+      }).join("");
+    }
+    updateNotifBadge();
+  }
+
+  async function loadNotifications(){
+    if(!sbClient || !currentUser) return;
+    var res = await sbClient.from("notifications").select("*").eq("user_id", currentUser.id).order("created_at", {ascending:false}).limit(20);
+    if(!res.error){ notifications = res.data || []; renderNotifDropdown(); }
+  }
+
+  async function markNotificationsRead(){
+    if(!sbClient || !currentUser) return;
+    var unreadIds = notifications.filter(function(n){ return !n.is_read; }).map(function(n){ return n.id; });
+    if(!unreadIds.length) return;
+    notifications.forEach(function(n){ n.is_read = true; });
+    renderNotifDropdown();
+    await sbClient.from("notifications").update({ is_read:true }).in("id", unreadIds);
+  }
+
+  function subscribeNotifRealtime(){
+    if(!sbClient || !currentUser) return;
+    unsubscribeNotifRealtime();
+    notifChannel = sbClient.channel("notifications-" + currentUser.id)
+      .on("postgres_changes",
+        { event:"INSERT", schema:"public", table:"notifications", filter:"user_id=eq." + currentUser.id },
+        function(payload){
+          notifications.unshift(payload.new);
+          renderNotifDropdown();
+        })
+      .subscribe();
+  }
+  function unsubscribeNotifRealtime(){
+    if(notifChannel){ sbClient.removeChannel(notifChannel); notifChannel = null; }
   }
 
   if(sbClient){
@@ -1144,7 +1517,7 @@
             '</div>' : '')+
           '<div class="issue-card__footer">'+
             '<button type="button" class="support-btn" data-id="'+iss.id+'">&#9650; <span class="support-count">'+iss.support+'</span> support</button>'+
-            '<span class="comment-count">&#9998; '+iss.comments+' comments</span>'+
+            '<button type="button" class="details-btn" data-id="'+iss.id+'" onclick="window.__openIssueDetail(\''+iss.id+'\')">Details</button>'+
           '</div>'+
         '</div>';
       grid.appendChild(card);
@@ -1194,6 +1567,7 @@
           var upd = await sbClient.from("issues").update({ status:newStatus }).eq("id", id);
           if(upd.error) throw upd.error;
           iss.status = newStatus;
+          insertTimelineEvent(id, newStatus, "", "status_change");
           renderFeed();
           renderMap();
         } catch(err){
@@ -1202,6 +1576,296 @@
         }
       });
     });
+  }
+
+  /* ---------- Issue Timeline (Feature 3) ---------- */
+  // event_type values: reported, status_change, proof_uploaded, approved, rejected
+  async function insertTimelineEvent(issueId, status, comment, eventType){
+    if(!sbClient || !currentUser) return;
+    try{
+      await sbClient.from("issue_timeline").insert({
+        issue_id: issueId, status: status, comment: comment || "",
+        user_id: currentUser.id, actor_name: currentUser.displayName, event_type: eventType
+      });
+    } catch(err){ /* non-fatal — timeline is supplementary */ }
+  }
+
+  async function insertNotification(userId, message, issueId, type){
+    if(!sbClient) return;
+    try{
+      await sbClient.from("notifications").insert({ user_id:userId, message:message, issue_id:issueId, type:type || "info", is_read:false });
+    } catch(err){ /* non-fatal */ }
+  }
+
+  /* ---------- Issue Detail Modal (Features 1 & 3) ---------- */
+  var issueDetailOverlay = document.getElementById("issueDetailOverlay");
+  document.getElementById("issueDetailClose").addEventListener("click", closeIssueDetail);
+  issueDetailOverlay.addEventListener("click", function(e){ if(e.target === issueDetailOverlay) closeIssueDetail(); });
+
+  function closeIssueDetail(){
+    issueDetailOverlay.classList.remove("is-open");
+    currentDetailIssueId = null;
+    currentDetailProof = null;
+  }
+
+  window.__openIssueDetail = function(id){ openIssueDetail(id); };
+
+  async function openIssueDetail(id){
+    var iss = issues.find(function(i){ return i.id === id; });
+    if(!iss) return;
+    currentDetailIssueId = id;
+    var cat = CATS[iss.category];
+
+    document.getElementById("idCase").textContent = iss.id + " · " + (cat ? cat.label : iss.category);
+    document.getElementById("idTitle").textContent = iss.title;
+    var statusEl = document.getElementById("idStatus");
+    statusEl.textContent = iss.status;
+    statusEl.className = "pill " + (STATUS_CLASS[iss.status] || "pill-reported");
+    document.getElementById("idMeta").textContent = iss.locality + " · " + iss.time;
+    document.getElementById("idDesc").textContent = iss.desc || "";
+
+    issueDetailOverlay.classList.add("is-open");
+
+    renderIdTimeline(iss, []); // render immediately with what we know, then refine below
+    document.getElementById("idProofSection").innerHTML = '<p style="font-size:12.5px;color:var(--ink-soft);margin-top:16px;">Loading resolution details...</p>';
+
+    var events = await loadTimelineEvents(id);
+    renderIdTimeline(iss, events);
+
+    var proof = await loadResolutionProofForIssue(iss);
+    currentDetailProof = proof;
+    renderProofSection(iss, proof);
+  }
+
+  async function loadTimelineEvents(issueId){
+    if(!sbClient) return [];
+    var res = await sbClient.from("issue_timeline").select("*").eq("issue_id", issueId).order("created_at", {ascending:true});
+    if(res.error) return [];
+    return res.data || [];
+  }
+
+  function renderIdTimeline(iss, events){
+    var wrap = document.getElementById("idTimeline");
+    var order = ["Reported","Under Review","Assigned","In Progress","Resolution Proof Uploaded","Pending Verification","Resolved"];
+    var currentIdx = order.indexOf(iss.status === "Pending Verification" ? "Pending Verification" : iss.status);
+
+    // Map DB events onto steps for date/time/user/comment when available
+    var byStatus = {};
+    events.forEach(function(ev){
+      var key = ev.event_type === "proof_uploaded" ? "Resolution Proof Uploaded" : ev.status;
+      byStatus[key] = ev;
+    });
+
+    var html = order.map(function(step, i){
+      var isDone = i <= currentIdx || byStatus[step];
+      var ev = byStatus[step];
+      var when = ev ? new Date(ev.created_at) : (step === "Reported" && iss.created_at ? new Date(iss.created_at) : null);
+      var whenStr = when ? when.toLocaleDateString() + " · " + when.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "";
+      var actor = ev ? ev.actor_name : (step === "Reported" ? "Citizen report" : "");
+      return '<div class="timeline__item'+(isDone ? ' is-done' : '')+'">'+
+        '<div class="timeline__step">'+step+'</div>'+
+        (whenStr || actor ? '<div class="timeline__meta">'+[whenStr, actor].filter(Boolean).join(" · ")+'</div>' : '')+
+        (ev && ev.comment ? '<div class="timeline__comment">'+ev.comment+'</div>' : '')+
+        '</div>';
+    }).join("");
+    wrap.innerHTML = html;
+  }
+
+  /* ---------- Resolution Proof Upload (Feature 1) ---------- */
+  async function loadResolutionProofForIssue(iss){
+    if(!sbClient || !currentUser) return null;
+    // RLS restricts citizens to their own rows; admins/officials use the verification queue instead.
+    var res = await sbClient.from("resolution_proofs").select("*").eq("issue_id", iss.id).order("uploaded_at", {ascending:false}).limit(1);
+    if(res.error || !res.data || !res.data.length) return null;
+    return res.data[0];
+  }
+
+  function renderProofSection(iss, proof){
+    var section = document.getElementById("idProofSection");
+    var isOwner = currentUser && iss.user_id && currentUser.id === iss.user_id;
+    var parts = [];
+
+    if(proof){
+      var badge = proof.status === "Approved"
+        ? '<span class="pill pill-verified">&#10003; Verified Resolution</span>'
+        : proof.status === "Rejected"
+          ? '<span class="pill pill-reported">Rejected — see note below</span>'
+          : '<span class="pill pill-pending">Pending Verification</span>';
+      parts.push(
+        '<div class="proof-box"><h4>Resolution proof</h4>' + badge +
+        '<div class="proof-preview">' +
+          (iss.image_url ? '<figure><img src="'+iss.image_url+'" alt="Original issue"><figcaption>Original</figcaption></figure>' : '') +
+          '<figure><img src="'+proof.image_url+'" alt="Resolution proof"><figcaption>Resolution</figcaption></figure>' +
+        '</div>' +
+        (proof.comment ? '<p class="proof-status-line">Citizen note: '+proof.comment+'</p>' : '') +
+        (proof.status === "Rejected" && proof.admin_comment ? '<p class="proof-status-line">Admin note: '+proof.admin_comment+'</p>' : '') +
+        '</div>'
+      );
+    }
+
+    var canUpload = isOwner && iss.status === "In Progress" && (!proof || proof.status === "Rejected");
+    if(canUpload){
+      parts.push(
+        '<div class="proof-box" id="proofUploadBox">' +
+          '<h4>Upload resolution proof</h4>' +
+          '<form id="proofUploadForm">' +
+            '<div class="field"><label for="proofImage">Photo of the fix</label><input type="file" id="proofImage" accept="image/*" required></div>' +
+            '<div class="field"><label for="proofComment">Comment (optional)</label><textarea id="proofComment" rows="2" style="min-height:56px;" placeholder="Anything the reviewer should know..."></textarea></div>' +
+            '<div class="modal-error" id="proofError"></div>' +
+            '<button type="submit" class="btn btn-primary btn-sm" id="proofSubmitBtn">Submit</button>' +
+          '</form>' +
+        '</div>'
+      );
+    } else if(isOwner && iss.status !== "In Progress" && !proof){
+      parts.push('<p style="font-size:12.5px;color:var(--ink-soft);margin-top:16px;">You can upload resolution proof once this issue is marked "In Progress".</p>');
+    }
+
+    section.innerHTML = parts.join("");
+
+    var form = document.getElementById("proofUploadForm");
+    if(form){
+      form.addEventListener("submit", function(e){ e.preventDefault(); submitResolutionProof(iss); });
+    }
+  }
+
+  async function submitResolutionProof(iss){
+    var fileInput = document.getElementById("proofImage");
+    var comment = document.getElementById("proofComment").value.trim();
+    var errEl = document.getElementById("proofError");
+    var btn = document.getElementById("proofSubmitBtn");
+    var file = fileInput.files[0];
+
+    if(!file){ errEl.textContent = "Please choose a photo."; return; }
+    if(!currentUser){ openAuthModal("signin"); return; }
+    if(!sbClient){ errEl.textContent = "Backend not connected."; return; }
+
+    btn.disabled = true; btn.textContent = "Uploading...";
+    errEl.textContent = "";
+
+    try{
+      var path = currentUser.id + "/" + iss.id + "/" + Date.now() + "-" + file.name.replace(/\s+/g, "_");
+      var up = await sbClient.storage.from("resolution-proofs").upload(path, file);
+      if(up.error) throw up.error;
+      var imageUrl = sbClient.storage.from("resolution-proofs").getPublicUrl(path).data.publicUrl;
+
+      var ins = await sbClient.from("resolution_proofs").insert({
+        issue_id: iss.id, user_id: currentUser.id, image_url: imageUrl, comment: comment, status: "Pending"
+      }).select().single();
+      if(ins.error) throw ins.error;
+
+      var upd = await sbClient.from("issues").update({ status:"Pending Verification" }).eq("id", iss.id);
+      if(upd.error) throw upd.error;
+      iss.status = "Pending Verification";
+
+      await insertTimelineEvent(iss.id, "Pending Verification", comment, "proof_uploaded");
+
+      renderFeed(); renderMap(); renderHeroOverview();
+      currentDetailProof = ins.data;
+      var statusEl = document.getElementById("idStatus");
+      statusEl.textContent = iss.status;
+      statusEl.className = "pill " + STATUS_CLASS[iss.status];
+      renderProofSection(iss, ins.data);
+      var events = await loadTimelineEvents(iss.id);
+      renderIdTimeline(iss, events);
+    } catch(err){
+      errEl.textContent = err.message || "Couldn't upload proof — try again.";
+      btn.disabled = false; btn.textContent = "Submit";
+    }
+  }
+
+  /* ---------- Admin Resolution Verification Queue (Feature 2) ---------- */
+  async function loadVerificationQueue(){
+    if(!sbClient) return;
+    var list = document.getElementById("verificationList");
+    var res = await sbClient.from("resolution_proofs").select("*").eq("status", "Pending").order("uploaded_at", {ascending:true});
+    if(res.error){ list.innerHTML = '<p class="empty-note">Couldn\'t load the queue.</p>'; return; }
+    renderVerificationQueue(res.data || []);
+  }
+
+  function renderVerificationQueue(pending){
+    var list = document.getElementById("verificationList");
+    if(!pending.length){
+      list.innerHTML = '<p class="empty-note">No resolution proofs waiting for review.</p>';
+      return;
+    }
+    list.innerHTML = pending.map(function(p){
+      var iss = issues.find(function(i){ return i.id === p.issue_id; });
+      var title = iss ? iss.title : ("Issue " + p.issue_id);
+      var originalImg = iss && iss.image_url ? iss.image_url : "";
+      return (
+        '<div class="verify-card" data-proof-id="'+p.id+'">' +
+          '<div class="verify-card__head"><h3 style="text-transform:none;font-size:15px;">'+title+'</h3>' +
+          '<span class="pill pill-pending">Pending</span></div>' +
+          '<div class="verify-card__images">' +
+            (originalImg ? '<figure><img src="'+originalImg+'"><figcaption>Original</figcaption></figure>' : '<div></div>') +
+            '<figure><img src="'+p.image_url+'"><figcaption>Resolution</figcaption></figure>' +
+          '</div>' +
+          (p.comment ? '<div class="verify-card__comment">"'+p.comment+'"</div>' : '') +
+          '<div class="verify-card__meta">Uploaded '+timeAgo(p.uploaded_at)+'</div>' +
+          '<div class="field"><textarea class="admin-comment-input" data-proof-id="'+p.id+'" rows="1" style="min-height:44px;" placeholder="Optional note for the citizen..."></textarea></div>' +
+          '<div class="verify-card__actions">' +
+            '<button type="button" class="btn btn-approve btn-sm" data-action="approve" data-proof-id="'+p.id+'">Approve</button>' +
+            '<button type="button" class="btn btn-reject btn-sm" data-action="reject" data-proof-id="'+p.id+'">Reject</button>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join("");
+
+    list.querySelectorAll('button[data-action]').forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var proofId = btn.getAttribute("data-proof-id");
+        var proof = pending.find(function(p){ return String(p.id) === String(proofId); });
+        var note = list.querySelector('.admin-comment-input[data-proof-id="'+proofId+'"]').value.trim();
+        if(btn.getAttribute("data-action") === "approve") approveResolutionProof(proof, btn);
+        else rejectResolutionProof(proof, note, btn);
+      });
+    });
+  }
+
+  async function approveResolutionProof(proof, btn){
+    if(!proof || !sbClient || !currentUser) return;
+    btn.disabled = true;
+    try{
+      var upd1 = await sbClient.from("resolution_proofs").update({
+        status:"Approved", reviewed_at:new Date().toISOString(), reviewed_by:currentUser.id
+      }).eq("id", proof.id);
+      if(upd1.error) throw upd1.error;
+
+      var upd2 = await sbClient.from("issues").update({ status:"Resolved" }).eq("id", proof.issue_id);
+      if(upd2.error) throw upd2.error;
+
+      await insertTimelineEvent(proof.issue_id, "Resolved", "Verified by admin", "approved");
+      await insertNotification(proof.user_id, "Your resolution proof was approved — issue marked Resolved.", proof.issue_id, "success");
+
+      await loadIssues();
+      loadVerificationQueue();
+    } catch(err){
+      alert("Couldn't approve: " + (err.message || "please try again."));
+      btn.disabled = false;
+    }
+  }
+
+  async function rejectResolutionProof(proof, note, btn){
+    if(!proof || !sbClient || !currentUser) return;
+    btn.disabled = true;
+    try{
+      var upd1 = await sbClient.from("resolution_proofs").update({
+        status:"Rejected", reviewed_at:new Date().toISOString(), reviewed_by:currentUser.id, admin_comment:note || null
+      }).eq("id", proof.id);
+      if(upd1.error) throw upd1.error;
+
+      var upd2 = await sbClient.from("issues").update({ status:"In Progress" }).eq("id", proof.issue_id);
+      if(upd2.error) throw upd2.error;
+
+      await insertTimelineEvent(proof.issue_id, "In Progress", note || "Rejected by admin", "rejected");
+      await insertNotification(proof.user_id, "Your resolution proof was rejected. You can upload another one." + (note ? (" Note: " + note) : ""), proof.issue_id, "warning");
+
+      await loadIssues();
+      loadVerificationQueue();
+    } catch(err){
+      alert("Couldn't reject: " + (err.message || "please try again."));
+      btn.disabled = false;
+    }
   }
 
   /* ---------- Threads ---------- */
@@ -1606,6 +2270,10 @@
       }).select();
       if(ins.error) throw ins.error;
 
+      if(ins.data && ins.data[0]){
+        insertTimelineEvent(ins.data[0].id, "Reported", description, "reported");
+      }
+
       resetReportForm();
       await loadIssues();
       loadTopContributors();
@@ -1666,7 +2334,8 @@
         id: row.id, title: row.title, category: row.category, status: row.status,
         severity: row.severity, locality: row.locality, lat: row.lat, lng: row.lng,
         desc: row.description, support: row.support_count || 0, comments: 0,
-        time: timeAgo(row.created_at), image_url: row.image_url
+        time: timeAgo(row.created_at), image_url: row.image_url,
+        created_at: row.created_at, user_id: row.user_id
       };
     });
     renderMap();
