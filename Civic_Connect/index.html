@@ -210,8 +210,7 @@
     max-width:360px;
     margin-left:auto;
   }
-  .hero__card::before{
-    content:'CASE CC-0142';
+  .hero__card .case-tag{
     position:absolute; top:-13px; left:20px;
     background:var(--accent); color:#fff;
     font-family:var(--font-mono); font-size:11px; letter-spacing:0.06em;
@@ -288,6 +287,12 @@
     height:440px; border-radius:var(--radius-l); border:4px solid var(--card);
     box-shadow:var(--shadow-card); background:#dfe3d9;
   }
+  .map-popup{ font-family:var(--font-body); min-width:190px; }
+  .map-popup__img{ width:100%; height:90px; object-fit:cover; border-radius:6px; margin-bottom:8px; }
+  .map-popup__status{ font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px; }
+  .map-popup__meta{ font-size:12px; color:var(--ink-soft); }
+  .map-popup__actions{ display:flex; gap:6px; margin-top:10px; }
+  .map-popup__actions .btn{ padding:6px 12px; font-size:12px; }
   .legend{
     background:var(--card); border-radius:var(--radius-m); padding:18px;
     box-shadow:var(--shadow-card); align-self:start;
@@ -356,6 +361,12 @@
   }
   .ai-result.is-visible{ display:block; }
   .ai-result b{ font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.04em; font-size:12px; }
+  .ai-spinner{
+    display:inline-block; width:12px; height:12px; margin-right:7px; vertical-align:middle;
+    border:2px solid var(--hairline); border-top-color:var(--accent); border-radius:50%;
+    animation:ai-spin .6s linear infinite;
+  }
+  @keyframes ai-spin{ to{ transform:rotate(360deg); } }
   .tips{ margin-top:24px; padding-top:20px; border-top:1px solid var(--hairline); }
   .tips li{ font-size:13px; color:var(--ink-soft); margin-bottom:8px; }
 
@@ -370,6 +381,14 @@
     transition:transform .15s ease;
   }
   .issue-card:hover{ transform:translateY(-3px); }
+  .issue-card.is-highlighted{
+    box-shadow:0 0 0 3px var(--accent), var(--shadow-card);
+    animation:issue-pulse 1.6s ease-in-out 2;
+  }
+  @keyframes issue-pulse{
+    0%, 100%{ transform:translateY(0); }
+    50%{ transform:translateY(-4px); }
+  }
   .issue-card__stripe{ height:5px; }
   .issue-card__img{
     height:120px; background-size:cover; background-position:center;
@@ -392,6 +411,15 @@
   .support-btn:hover{ border-color:var(--accent); color:var(--accent); }
   .support-btn.is-supported{ border-color:var(--accent); color:var(--accent); background:rgba(216,83,31,0.08); }
   .comment-count{ font-size:12.5px; color:var(--ink-soft); display:flex; align-items:center; gap:5px; }
+
+  .official-control{
+    display:flex; align-items:center; gap:8px; margin-bottom:12px;
+    padding:8px 10px; background:var(--paper-2); border:1px dashed var(--hairline); border-radius:var(--radius-s);
+  }
+  .official-control label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-soft); margin:0; white-space:nowrap; }
+  .official-control select{
+    flex:1; font-size:12.5px; padding:5px 8px; border-radius:6px; border:1.5px solid var(--hairline); background:var(--card); color:var(--ink);
+  }
 
   .feed-empty{ text-align:center; padding:50px 20px; color:var(--ink-soft); font-size:14px; }
 
@@ -419,31 +447,6 @@
   }
 
   .side-card{ background:var(--card); border-radius:var(--radius-m); padding:20px; box-shadow:var(--shadow-card); margin-bottom:18px; }
-
-  /* ---- Dashboard (Feature 2) ---- */
-  .dash-stats{ display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:26px; }
-  .dash-stat{ background:var(--card); border-radius:var(--radius-m); padding:18px 20px; box-shadow:var(--shadow-card); }
-  .dash-stat b{ display:block; font-family:var(--font-display); font-size:30px; line-height:1.1; color:var(--ink-blue); margin-bottom:4px; }
-  .dash-stat span{ font-size:12.5px; color:var(--ink-soft); }
-  .dash-toolbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
-  .dash-table{ display:flex; flex-direction:column; gap:10px; }
-  .dash-row{ display:grid; grid-template-columns:56px 1fr auto auto auto; gap:16px; align-items:center; background:var(--card); border-radius:var(--radius-m); padding:12px 16px; box-shadow:var(--shadow-card); }
-  .dash-row__thumb{ width:56px; height:56px; border-radius:8px; background-size:cover; background-position:center; background-color:var(--paper-2); flex-shrink:0; }
-  .dash-row__title{ font-weight:600; font-size:14px; margin-bottom:3px; }
-  .dash-row__meta{ font-size:12px; color:var(--ink-soft); }
-  .dash-select{ padding:8px 10px; border-radius:8px; border:1px solid var(--hairline); background:var(--card); font-size:13px; color:var(--ink); }
-  .dash-upload-label{ font-size:12px; color:var(--ink-soft); cursor:pointer; text-decoration:underline; white-space:nowrap; }
-  .dash-upload-label.is-done{ color:var(--status-resolved); text-decoration:none; font-weight:600; }
-  .dash-empty{ padding:34px; text-align:center; color:var(--ink-soft); background:var(--card); border-radius:var(--radius-m); }
-  @media (max-width: 860px){
-    .dash-stats{ grid-template-columns:repeat(2, 1fr); }
-    .dash-row{ grid-template-columns:44px 1fr; grid-template-areas:"thumb title" "sev sev" "select select" "upload upload"; }
-    .dash-row__thumb{ width:44px; height:44px; grid-area:thumb; }
-    .dash-row > *:nth-child(2){ grid-area:title; }
-    .dash-row > *:nth-child(3){ grid-area:sev; }
-    .dash-row > *:nth-child(4){ grid-area:select; }
-    .dash-row > *:nth-child(5){ grid-area:upload; }
-  }
   .side-card h3{ font-size:13px; letter-spacing:0.04em; color:var(--ink-soft); margin-bottom:12px; font-family:var(--font-mono); text-transform:uppercase; }
   .event-item{ display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--hairline); }
   .event-item:last-child{ border-bottom:none; }
@@ -453,6 +456,20 @@
   }
   .event-item p{ margin:0; font-size:13px; }
   .event-item span{ font-size:11.5px; color:var(--ink-soft); }
+
+  .mod-row{
+    display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+    padding:12px 0; border-bottom:1px solid var(--hairline);
+  }
+  .mod-row:last-child{ border-bottom:none; }
+  .mod-row__text{ font-size:13px; flex:1; }
+  .mod-row__meta{ font-size:11.5px; color:var(--ink-soft); display:block; margin-top:2px; }
+  .mod-delete{
+    background:none; border:1.5px solid var(--hairline); color:var(--mark-electric);
+    border-radius:999px; padding:5px 12px; font-size:12px; font-weight:700; flex-shrink:0;
+  }
+  .mod-delete:hover{ border-color:var(--mark-electric); background:rgba(192,35,31,0.06); }
+  .empty-note{ font-size:13px; color:var(--ink-soft); }
 
   /* ============ FOOTER ============ */
   footer{ background:var(--ink-blue); color:rgba(255,255,255,0.7); padding:44px 0 26px; }
@@ -538,7 +555,7 @@
         <li><a href="#report">Report</a></li>
         <li><a href="#feed">Issues</a></li>
         <li><a href="#community">Community</a></li>
-        <li id="navDashboardItem" style="display:none;"><a href="#dashboard">Dashboard</a></li>
+        <li id="navAdminLink" style="display:none;"><a href="#admin">Admin</a></li>
       </ul>
     </nav>
     <div class="nav__actions">
@@ -560,17 +577,18 @@
         <a href="#map-section" class="btn btn-ghost-dark">View live map</a>
       </div>
       <div class="hero__stats">
-        <div class="hero__stat"><b>1,204</b><span>Issues logged</span></div>
-        <div class="hero__stat"><b>68%</b><span>Resolved this year</span></div>
-        <div class="hero__stat"><b>5</b><span>City wards covered</span></div>
-        <div class="hero__stat"><b>48h</b><span>Avg. first response</span></div>
+        <div class="hero__stat"><b id="statIssuesLogged">1,204</b><span>Issues logged</span></div>
+        <div class="hero__stat"><b id="statResolvedPct">68%</b><span>Resolved</span></div>
+        <div class="hero__stat"><b id="statWardsCovered">5</b><span>City wards covered</span></div>
+        <div class="hero__stat"><b id="statTotalSupport">312</b><span>Residents supporting reports</span></div>
       </div>
     </div>
     <div class="hero__card">
-      <div class="hero__card-img"></div>
-      <span class="pill pill-progress">In progress</span>
-      <h3 style="margin-top:10px;">Pothole near Sakchi Market gate</h3>
-      <p class="meta">Ward 3 · Reported 2 hours ago · 14 residents support this</p>
+      <span class="case-tag" id="heroCardCase">CASE CC-0142</span>
+      <div class="hero__card-img" id="heroCardImg"></div>
+      <span class="pill pill-progress" id="heroCardStatus">In progress</span>
+      <h3 style="margin-top:10px;" id="heroCardTitle">Pothole near Sakchi Market gate</h3>
+      <p class="meta" id="heroCardMeta">Ward 3 · Reported 2 hours ago · 14 residents support this</p>
     </div>
   </div>
 </section>
@@ -729,32 +747,56 @@
     <div>
       <div class="side-card">
         <h3>Upcoming events</h3>
-        <div class="event-item"><div class="event-date">12<br>JUL</div><div><p>Riverbank cleanup drive</p><span>Ward 2 · 8:00 AM · 24 volunteers</span></div></div>
-        <div class="event-item"><div class="event-date">19<br>JUL</div><div><p>Tree plantation — Bistupur park</p><span>Ward 4 · 7:00 AM · 12 volunteers</span></div></div>
-        <div class="event-item"><div class="event-date">26<br>JUL</div><div><p>Ward town hall meeting</p><span>Community hall · 6:00 PM</span></div></div>
+        <div id="eventsList"></div>
       </div>
       <div class="side-card">
         <h3>Top contributors</h3>
-        <div class="event-item"><div class="avatar" style="width:32px;height:32px;font-size:12px;">RS</div><div><p>Rina S.</p><span>32 issues reported · 4 resolved this month</span></div></div>
-        <div class="event-item"><div class="avatar" style="width:32px;height:32px;font-size:12px;">AK</div><div><p>Amit K.</p><span>Verified 18 reports</span></div></div>
+        <div id="contributorsList"></div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="report-section wrap" id="dashboard" style="display:none;">
+<section class="community-section wrap" id="admin" style="display:none; padding-top:0;">
   <div class="section-head">
-    <span class="eyebrow">OFFICIAL ACCESS</span>
-    <h2>Dashboard</h2>
-    <p id="dashboardRoleNote">Signed in with elevated access.</p>
+    <span class="eyebrow">OFFICIALS ONLY</span>
+    <h2>Admin controls</h2>
+    <p>Manage community events and moderate discussions. Visible only to accounts with the official role.</p>
   </div>
-
-  <div class="dash-stats" id="dashStats"></div>
-
-  <div class="dash-toolbar">
-    <div class="chips" id="dashStatusChips"></div>
+  <div class="community-layout">
+    <div class="card">
+      <h3 style="text-transform:none; font-size:15px; margin-bottom:14px;">Moderate discussions</h3>
+      <div id="adminThreadList"></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:20px;">
+        <h3 style="text-transform:none; font-size:15px; margin-bottom:14px;">Add an event</h3>
+        <div class="field">
+          <label for="eventTitle">Title</label>
+          <input type="text" id="eventTitle" placeholder="e.g. Riverbank cleanup drive">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="eventDate">Date</label>
+            <input type="date" id="eventDate">
+          </div>
+          <div class="field">
+            <label for="eventVolunteers">Volunteers</label>
+            <input type="number" id="eventVolunteers" min="0" value="0">
+          </div>
+        </div>
+        <div class="field">
+          <label for="eventLocation">Location / time</label>
+          <input type="text" id="eventLocation" placeholder="e.g. Ward 2 · 8:00 AM">
+        </div>
+        <button type="button" class="btn btn-primary btn-sm" id="addEventBtn" style="width:100%; justify-content:center;">Add event</button>
+      </div>
+      <div class="card">
+        <h3 style="text-transform:none; font-size:15px; margin-bottom:14px;">Manage events</h3>
+        <div id="adminEventsList"></div>
+      </div>
+    </div>
   </div>
-  <div class="dash-table" id="dashTable"></div>
 </section>
 
 <footer>
@@ -832,8 +874,16 @@
   // 4. Paste your project URL and anon public key below
   var SUPABASE_URL = "https://svbqmdgasstznlflohyz.supabase.co";
   var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2YnFtZGdhc3N0em5sZmxvaHl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwNjQzNDIsImV4cCI6MjA5ODY0MDM0Mn0.t-vSqELtJv_522XCWnishtZUNZOSQpZ7mOEGsetvCqA";
+  
   var sbClient = (SUPABASE_URL.indexOf("http") === 0)
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+
+  // The Gemini call happens server-side in a Supabase Edge Function, so the
+  // Gemini API key never touches this file. This URL just points at that
+  // function — see supabase/functions/analyze-issue-photo/index.ts
+  var GEMINI_FUNCTION_URL = (SUPABASE_URL.indexOf("http") === 0)
+    ? SUPABASE_URL + "/functions/v1/analyze-issue-photo"
     : null;
 
   function timeAgo(iso){
@@ -853,10 +903,8 @@
   var threads = [];
   var mySupportedIds = {};
 
-  var state = { mapFilter:"all", feedCategory:"all", feedStatus:"all", dashStatus:"all", uploadedImageBase64:null, uploadedImageMime:null, uploadedFile:null };
-  var currentUser = null; // { id, email, displayName, role }
-  var PRIVILEGED_ROLES = { official:true, moderator:true, admin:true };
-  var ROLE_LABEL = { citizen:"Citizen", official:"Official", moderator:"Moderator", admin:"Admin" };
+  var state = { mapFilter:"all", feedCategory:"all", feedStatus:"all", uploadedImageBase64:null, uploadedImageMime:null, uploadedFile:null };
+  var currentUser = null; // { id, email, displayName }
 
   /* ---------- Nav toggle ---------- */
   document.getElementById("navToggle").addEventListener("click", function(){
@@ -890,12 +938,9 @@
       return;
     }
     if(currentUser){
-      var roleBadge = (currentUser.role && PRIVILEGED_ROLES[currentUser.role])
-        ? '<span class="pill pill-assigned" style="margin-left:6px;font-size:10px;">'+ROLE_LABEL[currentUser.role]+'</span>'
-        : '';
       area.innerHTML =
         '<span class="user-chip"><span class="avatar">'+initials(currentUser.displayName)+'</span>'+
-        currentUser.displayName+roleBadge+'<button type="button" id="signOutBtn">Sign out</button></span>';
+        currentUser.displayName+'<button type="button" id="signOutBtn">Sign out</button></span>';
       document.getElementById("signOutBtn").addEventListener("click", async function(){
         await sbClient.auth.signOut();
       });
@@ -903,6 +948,11 @@
       area.innerHTML = '<button type="button" class="btn btn-ghost-light btn-sm" id="signInBtn">Sign in</button>';
       document.getElementById("signInBtn").addEventListener("click", function(){ openAuthModal("signin"); });
     }
+
+    var isOfficial = !!(currentUser && currentUser.role === "official");
+    document.getElementById("navAdminLink").style.display = isOfficial ? "block" : "none";
+    document.getElementById("admin").style.display = isOfficial ? "block" : "none";
+    if(isOfficial){ renderAdminThreads(); loadEventsForAdmin(); }
   }
 
   document.getElementById("authForm").addEventListener("submit", async function(e){
@@ -939,46 +989,15 @@
         displayName: (session.user.user_metadata && session.user.user_metadata.display_name) || session.user.email.split("@")[0],
         role: "citizen"
       };
-      // profiles.role is the source of truth for access control (RLS-backed, not just UI).
-      try{
-        var profRes = await sbClient.from("profiles").select("role,display_name").eq("id", session.user.id).single();
-        if(!profRes.error && profRes.data){
-          currentUser.role = profRes.data.role || "citizen";
-          if(profRes.data.display_name) currentUser.displayName = profRes.data.display_name;
-        }
-      } catch(err){ /* keep default citizen role if the lookup fails */ }
+      var profRes = await sbClient.from("profiles").select("role").eq("id", session.user.id).single();
+      if(!profRes.error && profRes.data){
+        currentUser.role = profRes.data.role;
+      }
     } else {
       currentUser = null;
     }
     renderAuthArea();
-    applyRoleVisibility();
   }
-
-  /* ---------- Role-based access ---------- */
-  function isPrivileged(){
-    return !!(currentUser && currentUser.role && PRIVILEGED_ROLES[currentUser.role]);
-  }
-
-  function applyRoleVisibility(){
-    var navItem = document.getElementById("navDashboardItem");
-    var dashSection = document.getElementById("dashboard");
-    var privileged = isPrivileged();
-    navItem.style.display = privileged ? "" : "none";
-    dashSection.style.display = privileged ? "" : "none";
-
-    var note = document.getElementById("dashboardRoleNote");
-    if(privileged){
-      note.textContent = "Signed in as " + ROLE_LABEL[currentUser.role] + ". Manage complaints, update their status, and upload proof of completion below.";
-      renderDashboard();
-    }
-
-    // Guard against citizens/logged-out visitors jumping straight to #dashboard via URL.
-    if(location.hash === "#dashboard" && !privileged){
-      location.hash = "#top";
-    }
-  }
-
-  window.addEventListener("hashchange", applyRoleVisibility);
 
   if(sbClient){
     sbClient.auth.onAuthStateChange(function(){ refreshCurrentUser(); loadIssues(); loadThreads(); loadMySupports(); });
@@ -1022,16 +1041,11 @@
       function(){return state.feedStatus;},
       function(v){ state.feedStatus = v; renderFeedStatusChips(); renderFeed(); });
   }
-  function renderDashStatusChips(){
-    buildChips(document.getElementById("dashStatusChips"), "All statuses", statusOptions,
-      function(){return state.dashStatus;},
-      function(v){ state.dashStatus = v; renderDashStatusChips(); renderDashboard(); });
-  }
 
   /* ---------- Map ---------- */
   var map = L.map("civic-map", {scrollWheelZoom:false}).setView(CENTER, 13);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution:"&copy; OpenStreetMap contributors", maxZoom:18
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    attribution:"&copy; OpenStreetMap contributors &copy; CARTO", maxZoom:19, subdomains:"abcd"
   }).addTo(map);
   var markers = [];
 
@@ -1043,23 +1057,54 @@
     });
   }
 
+  window.viewIssueFromMap = function(id){
+    // switch feed filters to "all" so the card is guaranteed to be visible
+    state.feedCategory = "all";
+    state.feedStatus = "all";
+    renderFeedCategoryChips();
+    renderFeedStatusChips();
+    renderFeed();
+
+    var card = document.getElementById("issue-card-" + id);
+    if(!card) return;
+    card.scrollIntoView({ behavior:"smooth", block:"center" });
+    card.classList.add("is-highlighted");
+    setTimeout(function(){ card.classList.remove("is-highlighted"); }, 3200);
+  };
+
   function renderMap(){
     markers.forEach(function(m){ map.removeLayer(m); });
     markers = [];
     issues.forEach(function(iss){
       if(state.mapFilter !== "all" && iss.category !== state.mapFilter) return;
+      if(typeof iss.lat !== "number" || typeof iss.lng !== "number" || isNaN(iss.lat) || isNaN(iss.lng)) return;
       var marker = L.marker([iss.lat, iss.lng], {icon:markerIcon(CATS[iss.category].color)}).addTo(map);
+      var mapsUrl = "https://www.google.com/maps/dir/?api=1&destination=" + iss.lat + "," + iss.lng;
       marker.bindPopup(
-        "<strong>"+iss.title+"</strong><br>"+
-        CATS[iss.category].label+" &middot; "+iss.status+"<br>"+
-        iss.locality
+        '<div class="map-popup">' +
+          (iss.image_url ? '<img src="'+iss.image_url+'" alt="" class="map-popup__img">' : '') +
+          '<div class="map-popup__status" style="color:'+CATS[iss.category].color+';">'+CATS[iss.category].label+' &middot; '+iss.status+'</div>' +
+          '<strong>'+iss.title+'</strong><br>' +
+          '<span class="map-popup__meta">'+iss.locality+' &middot; '+iss.support+' supporting</span>' +
+          '<div class="map-popup__actions">' +
+            '<button type="button" class="btn btn-primary btn-sm" onclick="window.viewIssueFromMap(\''+iss.id+'\')">View issue</button>' +
+            '<a class="btn btn-ghost-light btn-sm" href="'+mapsUrl+'" target="_blank" rel="noopener">Navigate</a>' +
+          '</div>' +
+        '</div>',
+        { maxWidth: 240 }
       );
       markers.push(marker);
     });
+
+    if(markers.length > 0){
+      var group = L.featureGroup(markers);
+      map.fitBounds(group.getBounds().pad(0.25), { maxZoom: 15 });
+    } else {
+      map.setView(CENTER, 13);
+    }
   }
 
   /* ---------- Feed ---------- */
-  function timeAgo(t){ return t; }
 
   function renderFeed(){
     var grid = document.getElementById("feedGrid");
@@ -1079,6 +1124,7 @@
       var cat = CATS[iss.category];
       var card = document.createElement("article");
       card.className = "issue-card";
+      card.id = "issue-card-" + iss.id;
       card.innerHTML =
         '<div class="issue-card__stripe" style="background:'+cat.color+'"></div>'+
         '<div class="issue-card__img" style="background-size:cover;background-position:center;background-image:'+(iss.image_url ? 'url('+iss.image_url+')' : 'linear-gradient(135deg, '+cat.color+'33, '+cat.color+'11), repeating-linear-gradient(135deg, #d8d4c4 0 8px, #cfcbb9 8px 16px)')+';">'+
@@ -1089,6 +1135,13 @@
           '<h3>'+iss.title+'</h3>'+
           '<div class="issue-card__meta">'+iss.locality+' &middot; '+iss.time+'</div>'+
           '<div class="issue-card__desc">'+iss.desc+'</div>'+
+          (currentUser && currentUser.role === "official" ?
+            '<div class="official-control">'+
+              '<label>Update status</label>'+
+              '<select class="status-select" data-id="'+iss.id+'">'+
+                STATUSES.map(function(s){ return '<option value="'+s+'"'+(s===iss.status?' selected':'')+'>'+s+'</option>'; }).join("")+
+              '</select>'+
+            '</div>' : '')+
           '<div class="issue-card__footer">'+
             '<button type="button" class="support-btn" data-id="'+iss.id+'">&#9650; <span class="support-count">'+iss.support+'</span> support</button>'+
             '<span class="comment-count">&#9998; '+iss.comments+' comments</span>'+
@@ -1125,111 +1178,27 @@
         }
       });
     });
-  }
 
-  /* ---------- Official dashboard (Feature 2) ---------- */
-  function renderDashboard(){
-    if(!isPrivileged()) return;
-
-    // Stats
-    var total = issues.length;
-    var resolved = issues.filter(function(i){ return i.status === "Resolved"; }).length;
-    var pending = total - resolved;
-    var highPriority = issues.filter(function(i){
-      return (i.severity === "High" || i.severity === "Critical") && i.status !== "Resolved";
-    }).length;
-
-    var statsEl = document.getElementById("dashStats");
-    statsEl.innerHTML =
-      '<div class="dash-stat"><b>'+total+'</b><span>Total reports</span></div>'+
-      '<div class="dash-stat"><b>'+pending+'</b><span>Pending</span></div>'+
-      '<div class="dash-stat"><b>'+resolved+'</b><span>Resolved</span></div>'+
-      '<div class="dash-stat"><b>'+highPriority+'</b><span>High priority (open)</span></div>';
-
-    // Complaint list, filtered by the dashboard status chips
-    var table = document.getElementById("dashTable");
-    var filtered = issues.filter(function(i){
-      return state.dashStatus === "all" || i.status === state.dashStatus;
-    });
-
-    if(filtered.length === 0){
-      table.innerHTML = '<div class="dash-empty">No complaints match this filter.</div>';
-      return;
-    }
-
-    table.innerHTML = "";
-    filtered.forEach(function(iss){
-      var cat = CATS[iss.category] || CATS.other;
-      var row = document.createElement("div");
-      row.className = "dash-row";
-
-      var statusOpts = STATUSES.map(function(s){
-        return '<option value="'+s+'"'+(s===iss.status ? " selected" : "")+'>'+s+'</option>';
-      }).join("");
-
-      var uploadLabel = iss.resolutionImageUrl ? "Photo uploaded &#10003;" : "Upload completion photo";
-
-      row.innerHTML =
-        '<div class="dash-row__thumb" style="background-image:'+(iss.image_url ? "url("+iss.image_url+")" : "none")+'"></div>'+
-        '<div><div class="dash-row__title">'+iss.title+'</div>'+
-          '<div class="dash-row__meta">'+cat.label+' &middot; '+(iss.locality||"—")+' &middot; '+iss.time+'</div></div>'+
-        '<span class="pill '+STATUS_CLASS[iss.status]+'">'+iss.severity+'</span>'+
-        '<select class="dash-select" data-id="'+iss.id+'" aria-label="Update status for '+iss.title+'">'+statusOpts+'</select>'+
-        '<label class="dash-upload-label'+(iss.resolutionImageUrl ? " is-done" : "")+'" data-id="'+iss.id+'">'+uploadLabel+
-          '<input type="file" accept="image/*" style="display:none;"></label>';
-
-      table.appendChild(row);
-    });
-
-    // Status change → update Supabase, then reflect everywhere (dashboard, feed, map)
-    table.querySelectorAll(".dash-select").forEach(function(sel){
+    grid.querySelectorAll(".status-select").forEach(function(sel){
       sel.addEventListener("change", async function(){
         var id = sel.getAttribute("data-id");
         var newStatus = sel.value;
         var iss = issues.find(function(i){ return i.id === id; });
         if(!iss) return;
-        var prevStatus = iss.status;
-        iss.status = newStatus; // optimistic
-        renderFeed(); renderMap();
 
-        if(!sbClient) return;
+        if(!sbClient){
+          iss.status = newStatus; renderFeed(); renderMap();
+          return;
+        }
         try{
           var upd = await sbClient.from("issues").update({ status:newStatus }).eq("id", id);
           if(upd.error) throw upd.error;
+          iss.status = newStatus;
+          renderFeed();
+          renderMap();
         } catch(err){
-          iss.status = prevStatus; // revert on failure
-          sel.value = prevStatus;
-          renderFeed(); renderMap();
           alert("Couldn't update status: " + (err.message || "please try again."));
-        }
-      });
-    });
-
-    // Completion photo upload → Supabase Storage, then store the URL on the issue
-    table.querySelectorAll(".dash-upload-label").forEach(function(label){
-      var input = label.querySelector('input[type="file"]');
-      input.addEventListener("change", async function(){
-        var file = input.files && input.files[0];
-        if(!file || !sbClient || !currentUser) return;
-        var id = label.getAttribute("data-id");
-        var iss = issues.find(function(i){ return i.id === id; });
-        if(!iss) return;
-
-        label.textContent = "Uploading...";
-        try{
-          var path = "resolved/" + id + "/" + Date.now() + "-" + file.name.replace(/\s+/g, "_");
-          var up = await sbClient.storage.from("issue-photos").upload(path, file);
-          if(up.error) throw up.error;
-          var publicUrl = sbClient.storage.from("issue-photos").getPublicUrl(path).data.publicUrl;
-
-          var upd = await sbClient.from("issues").update({ resolution_image_url: publicUrl }).eq("id", id);
-          if(upd.error) throw upd.error;
-
-          iss.resolutionImageUrl = publicUrl;
-          renderDashboard();
-        } catch(err){
-          alert("Couldn't upload completion photo: " + (err.message || "please try again."));
-          renderDashboard();
+          sel.value = iss.status;
         }
       });
     });
@@ -1257,11 +1226,44 @@
     });
   }
 
+  async function deleteThread(id){
+    if(!sbClient) return;
+    var del = await sbClient.from("threads").delete().eq("id", id);
+    if(del.error){ alert("Couldn't delete: " + del.error.message); return; }
+    loadThreads();
+  }
+
+  function renderAdminThreads(){
+    var list = document.getElementById("adminThreadList");
+    if(!list) return;
+    if(threads.length === 0){
+      list.innerHTML = '<p class="empty-note">No discussions to moderate yet.</p>';
+      return;
+    }
+    list.innerHTML = "";
+    threads.forEach(function(t){
+      var row = document.createElement("div");
+      row.className = "mod-row";
+      row.innerHTML =
+        '<div class="mod-row__text">'+t.text+
+          '<span class="mod-row__meta">'+t.display_name+' &middot; '+timeAgo(t.created_at)+'</span>'+
+        '</div>'+
+        '<button type="button" class="mod-delete" data-id="'+t.id+'">Delete</button>';
+      list.appendChild(row);
+    });
+    list.querySelectorAll(".mod-delete").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        if(confirm("Delete this discussion post?")) deleteThread(btn.getAttribute("data-id"));
+      });
+    });
+  }
+
   async function loadThreads(){
     if(!sbClient) return;
     var res = await sbClient.from("threads").select("*").order("created_at", {ascending:false});
     if(!res.error) threads = res.data || [];
     renderThreads();
+    if(currentUser && currentUser.role === "official") renderAdminThreads();
   }
 
   document.getElementById("postThreadBtn").addEventListener("click", async function(){
@@ -1282,6 +1284,145 @@
   document.getElementById("threadInput").addEventListener("keydown", function(e){
     if(e.key === "Enter") document.getElementById("postThreadBtn").click();
   });
+
+  /* ---------- Events (sidebar, public read) ---------- */
+  var EVENT_MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+
+  function formatEventDate(dateStr){
+    var d = new Date(dateStr + "T00:00:00");
+    return { day: d.getDate(), month: EVENT_MONTHS[d.getMonth()] };
+  }
+
+  function renderEvents(events){
+    var list = document.getElementById("eventsList");
+    if(!events || events.length === 0){
+      list.innerHTML = '<p class="empty-note">No events scheduled yet.</p>';
+      return;
+    }
+    list.innerHTML = "";
+    events.forEach(function(ev){
+      var d = formatEventDate(ev.event_date);
+      var el = document.createElement("div");
+      el.className = "event-item";
+      el.innerHTML =
+        '<div class="event-date">'+d.day+'<br>'+d.month+'</div>'+
+        '<div><p>'+ev.title+'</p><span>'+(ev.location_time || "")+(ev.volunteers ? ' &middot; '+ev.volunteers+' volunteers' : '')+'</span></div>';
+      list.appendChild(el);
+    });
+  }
+
+  async function loadEvents(){
+    var container = document.getElementById("eventsList");
+    if(!sbClient){ container.innerHTML = '<p class="empty-note">Connect Supabase to load events.</p>'; return; }
+    var res = await sbClient.from("events").select("*").order("event_date", {ascending:true});
+    if(res.error){ container.innerHTML = '<p class="empty-note">Couldn\'t load events.</p>'; return; }
+    renderEvents(res.data || []);
+  }
+
+  /* ---------- Events (admin management) ---------- */
+  async function loadEventsForAdmin(){
+    var list = document.getElementById("adminEventsList");
+    if(!sbClient || !list) return;
+    var res = await sbClient.from("events").select("*").order("event_date", {ascending:true});
+    if(res.error){ list.innerHTML = '<p class="empty-note">Couldn\'t load events.</p>'; return; }
+    var events = res.data || [];
+    if(events.length === 0){
+      list.innerHTML = '<p class="empty-note">No events yet — add one on the left.</p>';
+      return;
+    }
+    list.innerHTML = "";
+    events.forEach(function(ev){
+      var d = formatEventDate(ev.event_date);
+      var row = document.createElement("div");
+      row.className = "mod-row";
+      row.innerHTML =
+        '<div class="mod-row__text">'+ev.title+
+          '<span class="mod-row__meta">'+d.day+' '+d.month+' &middot; '+(ev.location_time||"")+(ev.volunteers ? ' &middot; '+ev.volunteers+' volunteers' : '')+'</span>'+
+        '</div>'+
+        '<button type="button" class="mod-delete" data-id="'+ev.id+'">Delete</button>';
+      list.appendChild(row);
+    });
+    list.querySelectorAll(".mod-delete").forEach(function(btn){
+      btn.addEventListener("click", async function(){
+        if(!confirm("Delete this event?")) return;
+        var del = await sbClient.from("events").delete().eq("id", btn.getAttribute("data-id"));
+        if(del.error){ alert("Couldn't delete: " + del.error.message); return; }
+        loadEventsForAdmin();
+        loadEvents();
+      });
+    });
+  }
+
+  var addEventBtn = document.getElementById("addEventBtn");
+  if(addEventBtn){
+    addEventBtn.addEventListener("click", async function(){
+      var title = document.getElementById("eventTitle").value.trim();
+      var date = document.getElementById("eventDate").value;
+      var location = document.getElementById("eventLocation").value.trim();
+      var volunteers = parseInt(document.getElementById("eventVolunteers").value, 10) || 0;
+      if(!title || !date){ alert("Please add at least a title and a date."); return; }
+      if(!sbClient) return;
+
+      var ins = await sbClient.from("events").insert({
+        title:title, event_date:date, location_time:location, volunteers:volunteers
+      });
+      if(ins.error){ alert("Couldn't add event: " + ins.error.message); return; }
+
+      document.getElementById("eventTitle").value = "";
+      document.getElementById("eventDate").value = "";
+      document.getElementById("eventLocation").value = "";
+      document.getElementById("eventVolunteers").value = "0";
+      loadEventsForAdmin();
+      loadEvents();
+    });
+  }
+
+  /* ---------- Top contributors (computed from real issues) ---------- */
+  function renderTopContributors(list){
+    var el = document.getElementById("contributorsList");
+    if(!list || list.length === 0){
+      el.innerHTML = '<p class="empty-note">No contributors yet — be the first to report an issue.</p>';
+      return;
+    }
+    el.innerHTML = "";
+    list.forEach(function(c){
+      var row = document.createElement("div");
+      row.className = "event-item";
+      row.innerHTML =
+        '<div class="avatar" style="width:32px;height:32px;font-size:12px;">'+initials(c.name)+'</div>'+
+        '<div><p>'+c.name+'</p><span>'+c.reported+' issue'+(c.reported===1?"":"s")+' reported'+(c.resolved ? ' &middot; '+c.resolved+' resolved' : '')+'</span></div>';
+      el.appendChild(row);
+    });
+  }
+
+  async function loadTopContributors(){
+    var container = document.getElementById("contributorsList");
+    if(!sbClient){ container.innerHTML = '<p class="empty-note">Connect Supabase to see contributors.</p>'; return; }
+
+    var res = await sbClient.from("issues").select("user_id, status, anonymous");
+    if(res.error){ container.innerHTML = '<p class="empty-note">Couldn\'t load contributors.</p>'; return; }
+
+    var counts = {};
+    (res.data || []).forEach(function(r){
+      if(!r.user_id || r.anonymous) return; // respect anonymous reports
+      if(!counts[r.user_id]) counts[r.user_id] = { reported:0, resolved:0 };
+      counts[r.user_id].reported += 1;
+      if(r.status === "Resolved") counts[r.user_id].resolved += 1;
+    });
+
+    var ids = Object.keys(counts);
+    if(ids.length === 0){ renderTopContributors([]); return; }
+
+    var profRes = await sbClient.from("profiles").select("id, display_name").in("id", ids);
+    var nameMap = {};
+    (profRes.data || []).forEach(function(p){ nameMap[p.id] = p.display_name; });
+
+    var list = ids.map(function(id){
+      return { name: nameMap[id] || "A neighbor", reported: counts[id].reported, resolved: counts[id].resolved };
+    }).sort(function(a,b){ return b.reported - a.reported; }).slice(0, 5);
+
+    renderTopContributors(list);
+  }
 
   /* ---------- Report form: photo upload ---------- */
   var dropzone = document.getElementById("dropzone");
@@ -1318,50 +1459,66 @@
     reader.readAsDataURL(file);
   }
 
+  // Maps a severity string returned by Gemini to the matching radio button
+  function setSeverity(value){
+    var map = { Low:"sev-low", Medium:"sev-med", High:"sev-high", Critical:"sev-crit" };
+    var id = map[value];
+    var el = id ? document.getElementById(id) : null;
+    if(el) el.checked = true;
+  }
+
+  // Reusable: sends the uploaded photo to the Edge Function and returns
+  // { category, severity, summary, is_civic_issue, confidence }
+  async function analyzePhotoWithGemini(base64, mimeType){
+    if(!GEMINI_FUNCTION_URL){
+      throw new Error("Backend not connected yet — add your Supabase URL first.");
+    }
+    var res = await fetch(GEMINI_FUNCTION_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY,
+        "apikey": SUPABASE_ANON_KEY
+      },
+      body: JSON.stringify({ imageBase64: base64, mimeType: mimeType })
+    });
+    var data = await res.json();
+    if(!res.ok || data.error){
+      throw new Error(data.error || "Analysis failed");
+    }
+    return data;
+  }
+
   analyzeBtn.addEventListener("click", async function(){
     if(!state.uploadedImageBase64) return;
-    if(!sbClient){
-      aiResult.classList.add("is-visible");
-      aiResult.innerHTML = "AI analysis needs the app connected to Supabase.";
-      return;
-    }
     analyzeBtn.disabled = true;
     analyzeBtn.textContent = "Analyzing...";
     aiResult.classList.add("is-visible");
-    aiResult.innerHTML = "Looking at the photo...";
+    aiResult.innerHTML = '<span class="ai-spinner" aria-hidden="true"></span>Looking at the photo...';
 
     try{
-      // Calls the analyze-issue-photo Edge Function, which holds the Gemini API key server-side.
-      var invoke = await sbClient.functions.invoke("analyze-issue-photo", {
-        body: { image: state.uploadedImageBase64, mimeType: state.uploadedImageMime }
-      });
-      if(invoke.error) throw invoke.error;
-      var result = invoke.data;
-      if(!result || !result.success) throw new Error((result && result.error) || "Analysis failed.");
+      var result = await analyzePhotoWithGemini(state.uploadedImageBase64, state.uploadedImageMime);
+      var confidencePct = Math.round((result.confidence || 0) * 100);
 
-      var cat = CATS[result.category] ? result.category : "other";
+      if(!result.is_civic_issue){
+        aiResult.innerHTML =
+          'This image does not appear to contain a civic issue.<br>' +
+          '<span style="color:var(--ink-soft); font-size:12px;">Confidence: '+confidencePct+'%</span>';
+        return;
+      }
 
-      // Auto-fill category + severity (still editable by the citizen).
-      document.getElementById("category").value = cat;
-      var sevInput = document.querySelector('input[name="severity"][value="'+result.severity+'"]');
-      if(sevInput) sevInput.checked = true;
-
-      var flagHtml = !result.isCivicIssue
-        ? '<div style="color:var(--status-review);margin-top:6px;">This photo may not show a clear civic issue — double-check before submitting.</div>'
-        : '';
+      var cat = (result.category || "").toLowerCase();
+      if(cat && CATS[cat]){
+        document.getElementById("category").value = cat;
+      }
+      if(result.severity){
+        setSeverity(result.severity);
+      }
 
       aiResult.innerHTML =
-        '<b>Suggested: '+CATS[cat].label+' &middot; '+result.severity+' severity</b><br>'+
-        (result.reason || '') + flagHtml +
-        (result.summary ? '<br><button type="button" class="btn btn-ghost-light btn-sm" style="margin-top:10px;" id="insertSummary">Insert summary into description</button>' : '');
-
-      var insertBtn = document.getElementById("insertSummary");
-      if(insertBtn){
-        insertBtn.addEventListener("click", function(){
-          var descEl = document.getElementById("description");
-          descEl.value = descEl.value.trim() ? descEl.value.trim() + " " + result.summary : result.summary;
-        });
-      }
+        '<b>Suggested: '+(CATS[cat] ? CATS[cat].label : (result.category || "Unclassified"))+' &middot; '+(result.severity || "")+'</b><br>'+
+        (result.summary || "") +
+        '<br><span style="color:var(--ink-soft); font-size:12px;">Confidence: '+confidencePct+'%</span>';
     } catch(err){
       aiResult.innerHTML = "Analysis unavailable right now — pick a category manually below.";
     } finally {
@@ -1451,6 +1608,7 @@
 
       resetReportForm();
       await loadIssues();
+      loadTopContributors();
       document.getElementById("feed").scrollIntoView({behavior:"smooth", block:"start"});
     } catch(err){
       alert("Couldn't submit report: " + (err.message || "please try again."));
@@ -1461,6 +1619,44 @@
   });
 
   /* ---------- Load data from Supabase ---------- */
+  function renderHeroOverview(){
+    if(!issues || issues.length === 0) return; // keep the static placeholder until real data exists
+
+    var total = issues.length;
+    var resolvedCount = issues.filter(function(i){ return i.status === "Resolved"; }).length;
+    var resolvedPct = Math.round((resolvedCount / total) * 100);
+    var wards = {};
+    issues.forEach(function(i){ if(i.locality) wards[i.locality.trim()] = true; });
+    var wardCount = Object.keys(wards).length || 1;
+    var totalSupport = issues.reduce(function(sum, i){ return sum + (i.support || 0); }, 0);
+
+    document.getElementById("statIssuesLogged").textContent = total.toLocaleString();
+    document.getElementById("statResolvedPct").textContent = resolvedPct + "%";
+    document.getElementById("statWardsCovered").textContent = wardCount;
+    document.getElementById("statTotalSupport").textContent = totalSupport.toLocaleString();
+
+    var featured = issues[0]; // most recent report, since issues are loaded newest-first
+    var caseLabel = "CASE " + String(featured.id).replace(/-/g, "").slice(0, 8).toUpperCase();
+    document.getElementById("heroCardCase").textContent = caseLabel;
+
+    var statusEl = document.getElementById("heroCardStatus");
+    statusEl.textContent = featured.status;
+    statusEl.className = "pill " + (STATUS_CLASS[featured.status] || "pill-reported");
+
+    document.getElementById("heroCardTitle").textContent = featured.title;
+    document.getElementById("heroCardMeta").textContent =
+      featured.locality + " \u00b7 " + featured.time + " \u00b7 " + featured.support + " residents support this";
+
+    var imgEl = document.getElementById("heroCardImg");
+    if(featured.image_url){
+      imgEl.style.backgroundImage = "url(" + featured.image_url + ")";
+      imgEl.style.backgroundSize = "cover";
+      imgEl.style.backgroundPosition = "center";
+    } else {
+      imgEl.style.backgroundImage = "";
+    }
+  }
+
   async function loadIssues(){
     if(!sbClient){ renderMap(); renderFeed(); return; }
     var res = await sbClient.from("issues").select("*").order("created_at", {ascending:false});
@@ -1470,13 +1666,12 @@
         id: row.id, title: row.title, category: row.category, status: row.status,
         severity: row.severity, locality: row.locality, lat: row.lat, lng: row.lng,
         desc: row.description, support: row.support_count || 0, comments: 0,
-        time: timeAgo(row.created_at), image_url: row.image_url,
-        resolutionImageUrl: row.resolution_image_url || null
+        time: timeAgo(row.created_at), image_url: row.image_url
       };
     });
     renderMap();
     renderFeed();
-    if(isPrivileged()) renderDashboard();
+    renderHeroOverview();
   }
 
   async function loadMySupports(){
@@ -1493,18 +1688,19 @@
   renderMapChips();
   renderFeedCategoryChips();
   renderFeedStatusChips();
-  renderDashStatusChips();
   renderMap();
   renderFeed();
   renderThreads();
   renderAuthArea();
-  applyRoleVisibility();
+  loadEvents();
+  loadTopContributors();
 
   if(sbClient){
     refreshCurrentUser().then(function(){
       loadIssues();
       loadThreads();
       loadMySupports();
+      loadTopContributors();
     });
   }
 })();
