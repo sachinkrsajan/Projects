@@ -291,6 +291,36 @@
   .proof-preview img{ width:120px; height:90px; object-fit:cover; border-radius:8px; border:1px solid var(--hairline); }
   .proof-status-line{ display:flex; align-items:center; gap:8px; margin-top:10px; font-size:13px; }
 
+  /* ---- on-card resolution-proof call to action (always visible, never hidden in details) ---- */
+  .card-proof{ margin:2px 0 14px; }
+  .card-proof__upload{
+    width:100%; justify-content:center; background:var(--status-resolved); color:#fff; border:none;
+    font-size:13.5px; padding:12px 14px; border-radius:10px; font-weight:700;
+  }
+  .card-proof__upload:hover{ background:#256841; }
+  .card-proof__locked{
+    display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-soft);
+    background:var(--paper-2); border-radius:10px; padding:10px 12px;
+  }
+  .card-proof__pending{
+    display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:700; color:#8a6a12;
+    background:rgba(184,129,30,0.14); border-radius:10px; padding:10px 12px;
+  }
+  .card-proof__verified{
+    display:flex; align-items:center; gap:8px; font-size:12.5px; font-weight:700; color:var(--status-resolved);
+    background:rgba(46,125,79,0.12); border-radius:10px; padding:10px 12px;
+  }
+
+  /* ---- dedicated "Upload Resolution Proof" modal ---- */
+  .proof-modal__original{ width:100%; max-height:160px; object-fit:cover; border-radius:10px; margin-bottom:14px; }
+  .proof-modal__dropzone{
+    border:1.5px dashed var(--hairline); border-radius:12px; padding:22px 14px; text-align:center;
+    background:var(--paper-2); cursor:pointer; margin-bottom:12px;
+  }
+  .proof-modal__dropzone svg{ display:block; margin:0 auto 8px; color:var(--ink-soft); }
+  .proof-modal__dropzone p{ margin:0; font-size:12.5px; color:var(--ink-soft); }
+  .proof-modal__preview{ display:none; width:100%; max-height:200px; object-fit:cover; border-radius:10px; margin-bottom:12px; }
+
   /* ============ ADMIN VERIFICATION QUEUE ============ */
   .verify-card{ background:var(--card); border-radius:var(--radius-m); box-shadow:var(--shadow-card); padding:18px; margin-bottom:16px; }
   .verify-card__head{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:12px; }
@@ -1064,6 +1094,30 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="proofModalOverlay">
+  <div class="modal-box">
+    <button type="button" class="modal-close" id="proofModalClose" aria-label="Close">&times;</button>
+    <h3 style="text-transform:none; font-size:18px; margin-bottom:4px;">Upload resolution proof</h3>
+    <p class="meta" style="font-size:12.5px; color:var(--ink-soft); margin:0 0 14px;" id="proofModalIssueTitle"></p>
+    <img class="proof-modal__original" id="proofModalOriginal" alt="Original reported issue" style="display:none;">
+    <form id="proofModalForm">
+      <label class="proof-modal__dropzone" for="proofModalFile" id="proofModalDropzone">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <p id="proofModalDropzoneText">Tap to take a photo or choose one from your gallery</p>
+      </label>
+      <input type="file" id="proofModalFile" accept="image/*" capture="environment" style="display:none;" required>
+      <img class="proof-modal__preview" id="proofModalPreview" alt="Selected resolution photo preview">
+      <div class="field">
+        <label for="proofModalComment">Comment (optional)</label>
+        <textarea id="proofModalComment" rows="2" style="min-height:56px;" placeholder="Anything the reviewer should know..."></textarea>
+      </div>
+      <div class="modal-error" id="proofModalError"></div>
+      <button type="submit" class="btn btn-primary" id="proofModalSubmit" style="width:100%; justify-content:center; margin-top:6px;">Submit for verification</button>
+    </form>
+    <p class="modal-note">An admin will review your photo and either verify the fix or ask you to resubmit.</p>
+  </div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function(){
@@ -1479,6 +1533,26 @@
 
   /* ---------- Feed ---------- */
 
+  function renderCardProofAction(iss){
+    var isOwner = currentUser && iss.user_id && currentUser.id === iss.user_id;
+    if(!isOwner) return "";
+
+    if(iss.status === "In Progress"){
+      return '<div class="card-proof"><button type="button" class="btn card-proof__upload" data-proof-id="'+iss.id+'">&#128994; Upload Resolution Proof</button></div>';
+    }
+    if(iss.status === "Pending Verification"){
+      return '<div class="card-proof"><div class="card-proof__pending">&#128993; Resolution Submitted &mdash; Waiting for Admin Verification</div></div>';
+    }
+    if(iss.status === "Resolved"){
+      return '<div class="card-proof"><div class="card-proof__verified">&#9989; Verified and Closed</div></div>';
+    }
+    // Reported / Under Review / Assigned — never hide the feature, show why it's locked
+    var lockMsg = iss.status === "Assigned"
+      ? "Waiting for work to begin."
+      : "Resolution proof can be uploaded after work begins.";
+    return '<div class="card-proof"><div class="card-proof__locked">&#128274; '+lockMsg+'</div></div>';
+  }
+
   function renderFeed(){
     var grid = document.getElementById("feedGrid");
     grid.innerHTML = "";
@@ -1508,6 +1582,7 @@
           '<h3>'+iss.title+'</h3>'+
           '<div class="issue-card__meta">'+iss.locality+' &middot; '+iss.time+'</div>'+
           '<div class="issue-card__desc">'+iss.desc+'</div>'+
+          renderCardProofAction(iss)+
           (currentUser && currentUser.role === "official" ?
             '<div class="official-control">'+
               '<label>Update status</label>'+
@@ -1550,6 +1625,10 @@
           btn.classList.add("is-supported");
         }
       });
+    });
+
+    grid.querySelectorAll(".card-proof__upload").forEach(function(btn){
+      btn.addEventListener("click", function(){ openProofModal(btn.getAttribute("data-proof-id")); });
     });
 
     grid.querySelectorAll(".status-select").forEach(function(sel){
@@ -1671,7 +1750,7 @@
     wrap.innerHTML = html;
   }
 
-  /* ---------- Resolution Proof Upload (Feature 1) ---------- */
+  /* ---------- Resolution Proof Upload ---------- */
   async function loadResolutionProofForIssue(iss){
     if(!sbClient || !currentUser) return null;
     // RLS restricts citizens to their own rows; admins/officials use the verification queue instead.
@@ -1682,7 +1761,6 @@
 
   function renderProofSection(iss, proof){
     var section = document.getElementById("idProofSection");
-    var isOwner = currentUser && iss.user_id && currentUser.id === iss.user_id;
     var parts = [];
 
     if(proof){
@@ -1703,38 +1781,68 @@
       );
     }
 
-    var canUpload = isOwner && iss.status === "In Progress" && (!proof || proof.status === "Rejected");
-    if(canUpload){
-      parts.push(
-        '<div class="proof-box" id="proofUploadBox">' +
-          '<h4>Upload resolution proof</h4>' +
-          '<form id="proofUploadForm">' +
-            '<div class="field"><label for="proofImage">Photo of the fix</label><input type="file" id="proofImage" accept="image/*" required></div>' +
-            '<div class="field"><label for="proofComment">Comment (optional)</label><textarea id="proofComment" rows="2" style="min-height:56px;" placeholder="Anything the reviewer should know..."></textarea></div>' +
-            '<div class="modal-error" id="proofError"></div>' +
-            '<button type="submit" class="btn btn-primary btn-sm" id="proofSubmitBtn">Submit</button>' +
-          '</form>' +
-        '</div>'
-      );
-    } else if(isOwner && iss.status !== "In Progress" && !proof){
-      parts.push('<p style="font-size:12.5px;color:var(--ink-soft);margin-top:16px;">You can upload resolution proof once this issue is marked "In Progress".</p>');
-    }
+    // Same call-to-action shown on the issue card, kept in sync so the
+    // upload option is never buried differently in two places.
+    parts.push(renderCardProofAction(iss));
 
     section.innerHTML = parts.join("");
-
-    var form = document.getElementById("proofUploadForm");
-    if(form){
-      form.addEventListener("submit", function(e){ e.preventDefault(); submitResolutionProof(iss); });
-    }
   }
 
-  async function submitResolutionProof(iss){
-    var fileInput = document.getElementById("proofImage");
-    var comment = document.getElementById("proofComment").value.trim();
-    var errEl = document.getElementById("proofError");
-    var btn = document.getElementById("proofSubmitBtn");
+  var proofModalOverlay = document.getElementById("proofModalOverlay");
+  var proofModalIssueId = null;
+
+  function openProofModal(issueId){
+    if(!currentUser){ openAuthModal("signin"); return; }
+    var iss = issues.find(function(i){ return String(i.id) === String(issueId); });
+    if(!iss) return;
+    proofModalIssueId = issueId;
+
+    document.getElementById("proofModalIssueTitle").textContent = iss.title;
+    var origImg = document.getElementById("proofModalOriginal");
+    if(iss.image_url){ origImg.src = iss.image_url; origImg.style.display = "block"; }
+    else { origImg.style.display = "none"; }
+
+    document.getElementById("proofModalForm").reset();
+    document.getElementById("proofModalPreview").style.display = "none";
+    document.getElementById("proofModalDropzoneText").textContent = "Tap to take a photo or choose one from your gallery";
+    document.getElementById("proofModalError").textContent = "";
+    var submitBtn = document.getElementById("proofModalSubmit");
+    submitBtn.disabled = false; submitBtn.textContent = "Submit for verification";
+
+    proofModalOverlay.classList.add("is-open");
+  }
+  function closeProofModal(){ proofModalOverlay.classList.remove("is-open"); proofModalIssueId = null; }
+
+  document.getElementById("proofModalClose").addEventListener("click", closeProofModal);
+  proofModalOverlay.addEventListener("click", function(e){ if(e.target === proofModalOverlay) closeProofModal(); });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && proofModalOverlay.classList.contains("is-open")) closeProofModal();
+  });
+
+  document.getElementById("proofModalFile").addEventListener("change", function(){
+    var file = this.files[0];
+    var preview = document.getElementById("proofModalPreview");
+    if(!file){ preview.style.display = "none"; return; }
+    document.getElementById("proofModalDropzoneText").textContent = file.name;
+    var reader = new FileReader();
+    reader.onload = function(e){ preview.src = e.target.result; preview.style.display = "block"; };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById("proofModalForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    if(proofModalIssueId) submitResolutionProof(proofModalIssueId);
+  });
+
+  async function submitResolutionProof(issueId){
+    var iss = issues.find(function(i){ return String(i.id) === String(issueId); });
+    var fileInput = document.getElementById("proofModalFile");
+    var comment = document.getElementById("proofModalComment").value.trim();
+    var errEl = document.getElementById("proofModalError");
+    var btn = document.getElementById("proofModalSubmit");
     var file = fileInput.files[0];
 
+    if(!iss){ return; }
     if(!file){ errEl.textContent = "Please choose a photo."; return; }
     if(!currentUser){ openAuthModal("signin"); return; }
     if(!sbClient){ errEl.textContent = "Backend not connected."; return; }
@@ -1759,17 +1867,22 @@
 
       await insertTimelineEvent(iss.id, "Pending Verification", comment, "proof_uploaded");
 
+      closeProofModal();
       renderFeed(); renderMap(); renderHeroOverview();
-      currentDetailProof = ins.data;
-      var statusEl = document.getElementById("idStatus");
-      statusEl.textContent = iss.status;
-      statusEl.className = "pill " + STATUS_CLASS[iss.status];
-      renderProofSection(iss, ins.data);
-      var events = await loadTimelineEvents(iss.id);
-      renderIdTimeline(iss, events);
+
+      // if the issue details modal happens to be open for this issue, refresh it too
+      if(currentDetailIssueId === iss.id){
+        currentDetailProof = ins.data;
+        var statusEl = document.getElementById("idStatus");
+        statusEl.textContent = iss.status;
+        statusEl.className = "pill " + STATUS_CLASS[iss.status];
+        renderProofSection(iss, ins.data);
+        var events = await loadTimelineEvents(iss.id);
+        renderIdTimeline(iss, events);
+      }
     } catch(err){
       errEl.textContent = err.message || "Couldn't upload proof — try again.";
-      btn.disabled = false; btn.textContent = "Submit";
+      btn.disabled = false; btn.textContent = "Submit for verification";
     }
   }
 
